@@ -1,0 +1,2992 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Logia · Sistema Profesional</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root{--black:#000;--dark:#0a0a0a;--card:#111;--border:#1e1e1e;--txt:#e0e0e0;--muted:#555;--white:#fff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+/* Cinzel para títulos de marca, Inter para todo lo demás */
+.brand-font{font-family:'Cinzel',Georgia,serif!important;}
+body{
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--dark);
+  color:#e8e8e8;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-size:15px;
+  line-height:1.6;
+  letter-spacing:-.01em;
+}
+
+/* Jerarquía tipográfica global */
+h1,h2,h3,h4{color:#f0f0f0;letter-spacing:-.02em;line-height:1.15;}
+p{color:#8a8a8a;line-height:1.65;}
+strong{color:#e8e8e8;font-weight:600;}
+input,select,textarea{font-family:inherit;}
+
+/* Scrollbar dark */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:#0a0a0a;}
+::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#3a3a3a;}
+
+/* ── PANTALLAS ── */
+.screen{display:none;}
+.screen.active{display:block;}
+#bookingPage.active{display:flex;}
+
+/* ── Transiciones entre pantallas ── */
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(18px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+@keyframes screenOut{
+  from{opacity:1;transform:translateY(0);}
+  to  {opacity:0;transform:translateY(-12px);}
+}
+@keyframes screenInScale{
+  from{opacity:0;transform:scale(.97);}
+  to  {opacity:1;transform:scale(1);}
+}
+.screen-exit{animation:screenOut .22s ease forwards;pointer-events:none;}
+.screen-enter{animation:screenIn .35s cubic-bezier(.22,.68,0,1.2) forwards;}
+.screen-enter-scale{animation:screenInScale .3s ease forwards;}
+#bookingPage.active{display:block;}
+
+/* ══════════════════════════════════════════
+   DEMO / LANDING
+══════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ao{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
+.ao.vis{opacity:1;transform:translateY(0);}
+
+#demoPage nav{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);border-bottom:1px solid #141414;padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{font-size:1.15rem;font-weight:800;letter-spacing:.2em;color:#f0f0f0;text-transform:uppercase;font-family:'Cinzel',serif;}
+.nav-links{display:flex;align-items:center;gap:1.75rem;}
+.nav-links a{color:#777777;font-size:.75rem;text-decoration:none;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;cursor:pointer;font-weight:500;}
+.nav-links a:hover{color:#e8e8e8;}
+.nav-cta{background:#c8004a!important;color:#ffffff!important;padding:.45rem 1.1rem;border-radius:.35rem;font-weight:700;letter-spacing:.06em;}
+.nav-cta:hover{background:#a80040!important;color:#fff!important;}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;background:radial-gradient(ellipse at 50% 0%,#1a1a1a,#000 70%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-pill{display:inline-block;background:#1a0505;border:1px solid #4a1111;border-radius:9999px;padding:.38rem .95rem;font-size:.7rem;color:#cc6666;letter-spacing:.15em;text-transform:uppercase;margin-bottom:2rem;animation:fadeIn 1s ease;font-weight:500;}
+.hero h1{font-size:clamp(3.5rem,11vw,8rem);font-weight:900;letter-spacing:.08em;color:#ffffff;text-transform:uppercase;line-height:.88;margin-bottom:1.5rem;animation:fadeUp .8s ease .1s both;}
+.hero .tagline{font-size:clamp(.95rem,2.5vw,1.2rem);color:#999999;max-width:520px;margin:0 auto 3rem;line-height:1.7;animation:fadeUp .8s ease .2s both;font-weight:400;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s ease .3s both;}
+.btn-hero-p{background:#c8004a;color:#ffffff;padding:.85rem 1.85rem;border-radius:.4rem;font-weight:700;font-size:.88rem;text-decoration:none;letter-spacing:.04em;transition:all .2s;cursor:pointer;border:none;font-family:inherit;}
+.btn-hero-p:hover{background:#a80040;transform:translateY(-2px);box-shadow:0 8px 25px rgba(224,51,51,.3);}
+.btn-hero-s{background:transparent;color:#aaaaaa;padding:.85rem 1.85rem;border-radius:.4rem;font-weight:600;font-size:.88rem;text-decoration:none;letter-spacing:.04em;border:1px solid #444;transition:all .2s;cursor:pointer;font-family:inherit;}
+.btn-hero-s:hover{color:#e8e8e8;border-color:#3a3a3a;}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:#1e1e1e;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;animation:pulse 2s infinite;font-weight:500;}
+
+.ticker{background:#0d0d0d;border-top:1px solid #161616;border-bottom:1px solid #161616;padding:.7rem 0;overflow:hidden;}
+.ticker-inner{display:flex;gap:2.5rem;animation:slide 22s linear infinite;width:max-content;}
+.ticker-item{font-size:.68rem;color:#555555;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;font-weight:500;}
+
+.dsec{padding:5rem 2rem;}
+.dwrap{max-width:1080px;margin:0 auto;}
+.dlbl{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:#c8004a;margin-bottom:.75rem;font-weight:700;}
+.dtitle{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;color:#ffffff;letter-spacing:-.02em;margin-bottom:.9rem;}
+.dsub{font-size:.92rem;color:#aaaaaa;max-width:520px;line-height:1.7;}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;background:#0d0d0d;border:1px solid #161616;border-radius:.7rem;overflow:hidden;margin-top:2.5rem;}
+.mod{background:#080808;padding:1.75rem;transition:background .25s;}
+.mod:hover{background:#0f0f0f;}
+.mod-ico{font-size:1.6rem;margin-bottom:.9rem;}
+.mod-t{font-size:.9rem;font-weight:700;color:#ffffff;margin-bottom:.45rem;letter-spacing:-.01em;}
+.mod-d{font-size:.8rem;color:#888888;line-height:1.65;font-weight:400;}
+.mod-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.85rem;}
+.mtag{font-size:.62rem;padding:.2rem .55rem;background:#1a0505;border:1px solid #4a1111;border-radius:9999px;color:#cc6666;font-weight:500;}
+
+.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;margin-top:2.5rem;}
+.fstep{padding:1.75rem 1.4rem;border:1px solid #141414;position:relative;}
+.fnum{font-size:2.8rem;font-weight:900;color:#161616;line-height:1;margin-bottom:.65rem;}
+.ftit{font-size:.88rem;font-weight:700;color:#ffffff;margin-bottom:.4rem;letter-spacing:-.01em;}
+.fdesc{font-size:.78rem;color:#888888;line-height:1.65;}
+
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:#161616;border-radius:.7rem;overflow:hidden;margin-top:2.5rem;}
+.sbig{background:#080808;padding:2.25rem 1.75rem;text-align:center;}
+.sbig .sn{font-size:2.8rem;font-weight:900;color:#c8004a;line-height:1;letter-spacing:-.03em;}
+.sbig .sl{font-size:.65rem;color:#777777;text-transform:uppercase;letter-spacing:.14em;margin-top:.5rem;font-weight:600;}
+
+.tmonios{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.1rem;margin-top:2.5rem;}
+.tcard{background:#0d0d0d;border:1px solid #161616;border-radius:.7rem;padding:1.6rem;}
+.tstars{color:#993333;font-size:.85rem;letter-spacing:.1rem;margin-bottom:.9rem;}
+.tq{font-size:.83rem;color:#aaaaaa;line-height:1.72;margin-bottom:1.1rem;font-style:italic;}
+.tauth{display:flex;align-items:center;gap:.65rem;}
+.tav{width:34px;height:34px;border-radius:50%;background:#161616;border:1px solid #222;display:flex;align-items:center;justify-content:center;font-size:.85rem;}
+.tname{font-size:.8rem;font-weight:600;color:#e8e8e8;letter-spacing:-.01em;}
+.trol{font-size:.7rem;color:#666666;}
+
+.planes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem;margin-top:2.5rem;}
+.plan{background:#0d0d0d;border:1px solid #161616;border-radius:.7rem;padding:1.75rem;position:relative;}
+.plan.feat{border-color:#2a2a2a;background:#111;}
+.pbadge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#fff;color:#000;font-size:.62rem;font-weight:800;padding:.22rem .85rem;border-radius:0 0 .35rem .35rem;letter-spacing:.1em;text-transform:uppercase;}
+.pname{font-size:.7rem;color:#2a2a2a;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.7rem;}
+.pprice{font-size:2.2rem;font-weight:900;color:#fff;line-height:1;margin-bottom:.25rem;}
+.pprice span{font-size:.85rem;color:#333;font-weight:400;}
+.pdesc{font-size:.78rem;color:#888888;margin-bottom:1.35rem;line-height:1.55;}
+.pfeat{list-style:none;display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.6rem;}
+.pfeat li{font-size:.78rem;color:#aaaaaa;padding-left:1.2rem;position:relative;font-weight:400;}
+.pfeat li::before{content:'✓';position:absolute;left:0;color:#c8004a;font-weight:700;}
+.pbtn{width:100%;padding:.75rem;border-radius:.38rem;font-weight:600;font-size:.82rem;cursor:pointer;letter-spacing:.04em;transition:all .2s;border:1px solid #2a2a2a;background:#161616;color:#888888;font-family:inherit;}
+.pbtn.feat-btn{background:#c8004a;color:#ffffff;border-color:#c8004a;font-weight:700;}
+.pbtn:hover{opacity:.8;}
+
+.cta-fin{text-align:center;padding:7rem 2rem;background:radial-gradient(ellipse at center,#0f0f0f,#000 80%);}
+.cta-fin h2{font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;color:#ffffff;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:.9rem;}
+.cta-fin p{font-size:.92rem;color:#aaaaaa;margin-bottom:2.25rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7;}
+.cta-wa-big{display:inline-flex;align-items:center;gap:.7rem;background:#162416;color:#6ab86a;border:1px solid #224422;padding:.9rem 1.85rem;border-radius:.45rem;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .2s;margin-top:.75rem;}
+.cta-wa-big:hover{background:#1d321d;}
+.cta-pills{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin-top:2.5rem;}
+.cpill{text-align:center;}
+.cpill-ico{font-size:1.3rem;margin-bottom:.4rem;}
+.cpill-lbl{font-size:.68rem;color:#888888;font-weight:500;letter-spacing:.05em;}
+
+#demoPage footer{background:#000;border-top:1px solid #0d0d0d;padding:1.75rem;text-align:center;}
+#demoPage footer p{font-size:.7rem;color:#1e1e1e;letter-spacing:.1em;}
+
+/* mockup */
+.mwrap{background:#0d0d0d;border:1px solid #161616;border-radius:.7rem;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.8);margin-top:2.5rem;}
+.mbar{background:#080808;border-bottom:1px solid #141414;padding:.65rem .9rem;display:flex;align-items:center;gap:.45rem;}
+.dot{width:9px;height:9px;border-radius:50%;}
+.dr{background:#2a1a1a;}.dy{background:#2a2a1a;}.dg{background:#1a2a1a;}
+.murl{flex:1;background:#141414;border-radius:.22rem;padding:.22rem .7rem;font-size:.65rem;color:#2a2a2a;text-align:center;margin:0 .65rem;}
+.mbody{padding:1.25rem;display:grid;grid-template-columns:140px 1fr;gap:.9rem;min-height:260px;}
+.mside{display:flex;flex-direction:column;gap:.4rem;}
+.mni{background:#141414;border:1px solid #1a1a1a;border-radius:.3rem;padding:.5rem .75rem;font-size:.68rem;color:#333;}
+.mni.on{background:#161616;border-color:#2a2a2a;color:#aaa;}
+.mcont{display:flex;flex-direction:column;gap:.65rem;}
+.mcard{background:#141414;border:1px solid #1a1a1a;border-radius:.4rem;padding:.85rem;}
+.mctit{font-size:.6rem;color:#2a2a2a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.65rem;}
+.mcita{background:#0d0d0d;border:1px solid #161616;border-left:3px solid #1e3a1e;border-radius:.3rem;padding:.5rem .7rem;margin-bottom:.35rem;}
+.mcita h4{font-size:.68rem;color:#aaa;margin-bottom:.15rem;}
+.mcita p{font-size:.62rem;color:#2a2a2a;}
+.mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;}
+.mst{background:#0d0d0d;border:1px solid #141414;border-radius:.3rem;padding:.5rem;text-align:center;}
+.mst .v{font-size:1rem;font-weight:800;color:#fff;}
+.mst .l{font-size:.58rem;color:#2a2a2a;text-transform:uppercase;}
+
+/* bk mini mockup */
+.bkmock{background:#0d0d0d;border:1px solid #161616;border-radius:.7rem;overflow:hidden;max-width:380px;margin:2.5rem auto 0;}
+.bkmh{background:#000;padding:1.1rem 1.4rem;border-bottom:1px solid #141414;}
+.bkmh h3{font-size:1rem;font-weight:900;letter-spacing:.2em;color:#fff;}
+.bkmh p{font-size:.6rem;color:#2a2a2a;letter-spacing:.15em;}
+.bkmb{padding:1.35rem;}
+.bkms{font-size:.62rem;color:#2a2a2a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.9rem;}
+.bksg{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;}
+.bksc{background:#0a0a0a;border:1px solid #161616;border-radius:.38rem;padding:.7rem;cursor:default;}
+.bksc.sel{border-color:#444;}
+.bksc h4{font-size:.72rem;color:#aaa;margin-bottom:.22rem;}
+.bksc .bp{font-size:.85rem;font-weight:800;color:#fff;}
+.bksc .bd{font-size:.6rem;color:#2a2a2a;}
+.bkwb{width:100%;padding:.75rem;background:#162416;color:#6ab86a;border:1px solid #224422;border-radius:.38rem;font-weight:700;font-size:.8rem;text-align:center;margin-top:1.1rem;}
+
+/* ══════════════════════════════════════════
+   BOOKING (cliente)
+══════════════════════════════════════════ */
+#bookingPage{min-height:100vh;background:radial-gradient(ellipse at center,#1a0018 0%,#000 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;overflow:hidden;}
+.bk-hdr{display:none;}
+.bk-hdr h1{font-size:1.45rem;font-weight:900;letter-spacing:.25em;color:#ffffff;text-transform:uppercase;}
+.bk-hdr p{font-size:.65rem;color:#c8004a;letter-spacing:.2em;margin-top:.1rem;font-weight:600;}
+.bk-suc{display:none;}
+.bk-suc b{color:#ffffff;font-weight:700;}
+.bk-wrap{width:100%;max-width:460px;margin:0 auto;padding:0;}
+.stepper{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:1.5rem;}
+.stp{display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+.stp-n{width:30px;height:30px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#666;transition:all .3s;}
+.stp-n.act{border-color:#c8004a;color:#ffffff;background:#2a0030;}
+.stp-n.dn{border-color:#333;color:#333;background:#161616;}
+.stp-l{font-size:.58rem;color:#666;text-transform:uppercase;letter-spacing:.06em;}
+.stp-l.act{color:#c8004a;}
+.stp-line{flex:1;height:2px;background:#141414;min-width:25px;}
+.stp-line.dn{background:#222;}
+.bk-card{background:#0d0d0d;border:1px solid #3a1010;border-radius:1rem;padding:1.75rem;animation:fadeUp .3s ease;box-shadow:0 25px 60px rgba(0,0,0,.9),0 0 0 1px rgba(224,51,51,.08);max-height:82vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a1010 transparent;}
+.bk-card h2{font-size:.95rem;font-weight:700;color:#ffffff;margin-bottom:.25rem;letter-spacing:-.01em;}
+.bk-card .sub{font-size:.75rem;color:#777777;margin-bottom:1rem;}
+.srv-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;}
+.srv-card{background:#080808;border:2px solid #222;border-radius:.55rem;padding:.75rem;cursor:pointer;transition:all .2s;}
+.srv-card:hover{border-color:#333;}
+.srv-card.sel{border-color:#c8004a;background:#0f0015;}
+.srv-card h3{color:#ffffff;font-size:.85rem;font-weight:600;margin-bottom:.4rem;letter-spacing:-.01em;}
+.srv-card .price{font-size:1rem;font-weight:700;color:#c8004a;letter-spacing:-.02em;}
+.srv-card .dur{font-size:.68rem;color:#888888;margin-top:.15rem;}
+.est-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;}
+.est-card{background:#080808;border:2px solid #222;border-radius:.55rem;padding:.75rem;cursor:pointer;transition:all .2s;}
+.est-card:hover{border-color:#333;}
+.est-card.sel{border-color:#c8004a;background:#0f0015;}
+.est-card h3{color:#ffffff;font-size:.85rem;font-weight:600;margin-bottom:.3rem;letter-spacing:-.01em;}
+.est-card p{font-size:.7rem;color:#999999;}
+.bk-fg{display:flex;flex-direction:column;gap:.75rem;margin-bottom:.9rem;}
+.bk-fg label{font-size:.68rem;font-weight:600;color:#888888;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.3rem;}
+.bk-fg input,.bk-fg select,.bk-fg textarea{padding:.6rem .85rem;background:#080808;border:1px solid #2a2a2a;border-radius:.4rem;color:#e0e0e0;font-size:.85rem;width:100%;transition:all .2s;font-family:inherit;}
+.bk-fg input:focus,.bk-fg select:focus,.bk-fg textarea:focus{outline:none;border-color:#c8004a;background:#0f0f0f;box-shadow:0 0 0 2px rgba(224,51,51,.12);}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;}
+.tslot{background:#080808;border:2px solid #222;border-radius:.4rem;padding:.45rem;text-align:center;cursor:pointer;font-size:.75rem;color:#888888;transition:all .2s;}
+.tslot:hover:not(.taken){border-color:#c8004a;color:#ffffff;}
+.tslot.sel{border-color:#c8004a;color:#ffffff;background:#1a0018;}
+.tslot.taken{opacity:.25;cursor:not-allowed;}
+.resumen{background:#080808;border:1px solid #2a1010;border-radius:.55rem;padding:.9rem;margin-bottom:1rem;}
+.res-row{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #111;}
+.res-row:last-child{border:none;}
+.res-row span:first-child{color:#777777;font-size:.78rem;}
+.res-row span:last-child{color:#ffffff;font-size:.78rem;font-weight:600;text-align:right;}
+.bk-nav{display:flex;gap:.65rem;margin-top:1rem;}
+.bkb{flex:1;padding:.75rem;border-radius:.45rem;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;}
+.bkb-back{background:#161616;color:#555;border:1px solid #222;}
+.bkb-back:hover{background:#1a1a1a;color:#aaa;}
+.bkb-next{background:#c8004a;color:#ffffff;border:none;letter-spacing:.04em;}
+.bkb-next:hover{background:#a80040;}
+.bkb-wa{width:100%;padding:.85rem;background:#c8004a;color:#ffffff;border:none;border-radius:.45rem;font-weight:700;font-size:.9rem;cursor:pointer;margin-bottom:.65rem;transition:background .2s;font-family:inherit;}
+.bkb-wa:hover{background:#a80040;}
+.confirm-ico{font-size:2.5rem;text-align:center;margin-bottom:.65rem;}
+.confirm-msg{text-align:center;font-size:.85rem;color:#aaaaaa;line-height:1.6;margin-bottom:1.35rem;}
+
+/* ══════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════ */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a1a1a,#000);}
+.lbox{background:#111;border:1px solid #1e1e1e;border-radius:1rem;padding:2.75rem 2.25rem;width:100%;max-width:390px;box-shadow:0 25px 60px rgba(0,0,0,.9);}
+.lbox h1{font-size:2.6rem;font-weight:900;letter-spacing:.25em;color:#ffffff;text-align:center;text-transform:uppercase;}
+.lbox .lsub{font-size:.68rem;letter-spacing:.25em;color:#c8004a;text-align:center;margin-bottom:2rem;font-weight:600;}
+.lbox .back-demo{display:block;text-align:center;font-size:.72rem;color:#555555;text-decoration:none;margin-bottom:1.5rem;cursor:pointer;transition:color .2s;letter-spacing:.08em;}
+.lbox .back-demo:hover{color:#555;}
+.lbox label{display:block;font-size:.7rem;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.32rem;}
+.lbox input{width:100%;padding:.7rem .95rem;background:#111;border:1px solid #2a2a2a;border-radius:.45rem;color:#ffffff;font-size:.95rem;margin-bottom:1rem;transition:border-color .2s;}
+.lbox input:focus{outline:none;border-color:#c8004a;background:#0f0f0f;box-shadow:0 0 0 2px rgba(224,51,51,.15);}
+.lbtn{width:100%;padding:.85rem;background:#c8004a;color:#ffffff;border:none;border-radius:.45rem;font-weight:700;font-size:.95rem;cursor:pointer;letter-spacing:.1em;transition:background .2s;font-family:inherit;}
+.lbtn:hover{background:#a80040;}
+.lerr{color:#ff5555;font-size:.78rem;text-align:center;margin-top:.65rem;display:none;}
+.demo-hint{margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid #161616;}
+.demo-hint h4{font-size:.66rem;color:#555555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.55rem;}
+.ditem{display:flex;justify-content:space-between;padding:.42rem .65rem;background:#141414;border-radius:.32rem;margin-bottom:.28rem;cursor:pointer;border:1px solid #1a1a1a;transition:border-color .2s;}
+.ditem:hover{border-color:#2a2a2a;}
+.ditem span{font-size:.74rem;color:#999999;}
+
+/* ══════════════════════════════════════════
+   APP
+══════════════════════════════════════════ */
+.hdr{background:#000;padding:.85rem 1.6rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #c8004a;position:sticky;top:0;z-index:200;}
+.hdr-brand h1{font-size:1.3rem;font-weight:800;letter-spacing:.15em;color:#ffffff;text-transform:uppercase;cursor:pointer;font-family:'Cinzel',serif;}
+.hdr-brand p{font-size:.6rem;color:#c8004a;letter-spacing:.2em;font-weight:600;}
+.hdr-r{display:flex;align-items:center;gap:.85rem;}
+.suc-pill{background:#0d0d0d;border:1px solid #3a1010;border-radius:2rem;padding:.3rem .85rem;font-size:.72rem;color:#cc6666;}
+.suc-pill b{color:#ffffff;font-weight:700;}
+.bell-wrap{position:relative;cursor:pointer;}
+.bell-btn{background:#0d0d0d;border:1px solid #1a1a1a;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:border-color .2s;}
+.bell-btn:hover{border-color:#444;}
+.bell-badge{position:absolute;top:-4px;right:-4px;background:#cc3333;color:#fff;font-size:.58rem;font-weight:800;border-radius:50%;width:15px;height:15px;display:none;align-items:center;justify-content:center;}
+.bell-badge.show{display:flex;}
+.out-btn{background:#0d0d0d;color:#888888;border:1px solid #2a2a2a;padding:.3rem .85rem;border-radius:.32rem;cursor:pointer;font-size:.72rem;transition:all .2s;}
+.out-btn:hover{color:#ffffff;border-color:#555;}
+
+.tabs{background:#080808;border-bottom:1px solid #141414;display:flex;padding:0 1.4rem;overflow-x:auto;}
+.tbb{padding:.8rem .95rem;border:none;background:none;cursor:pointer;font-weight:600;font-size:.76rem;color:#666666;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;letter-spacing:.04em;font-family:inherit;}
+.tbb:hover{color:#cccccc;}
+.tbb.active{color:#ffffff;border-bottom-color:#c8004a;}
+
+.wrap{max-width:1180px;margin:1.6rem auto;padding:0 1.4rem;}
+.card{background:#0d0d0d;border:1px solid #161616;border-radius:.7rem;padding:1.5rem;margin-bottom:1.3rem;}
+.card h2{font-size:.8rem;font-weight:700;color:#ffffff;margin-bottom:1rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2a2a2a;padding-bottom:.6rem;}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.85rem;margin-bottom:.85rem;}
+.fgrp{display:flex;flex-direction:column;gap:.28rem;}
+label{font-size:.67rem;font-weight:600;color:#888888;text-transform:uppercase;letter-spacing:.07em;}
+input,select,textarea{padding:.52rem .8rem;background:#0d0d0d;border:1px solid #2a2a2a;border-radius:.38rem;color:#e0e0e0;font-size:.84rem;transition:all .2s;width:100%;font-family:inherit;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#c8004a;background:#111;box-shadow:0 0 0 2px rgba(224,51,51,.12);}
+.btn{padding:.5rem .95rem;background:#161616;color:#aaaaaa;border:1px solid #333;border-radius:.38rem;font-weight:600;font-size:.77rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.32rem;font-family:inherit;}
+.btn:hover{background:#1e1e1e;border-color:#555;color:#ffffff;}
+.btn-full{width:100%;justify-content:center;margin-top:.55rem;background:#c8004a;color:#fff;border-color:#a80040;}
+.btn-sm{padding:.28rem .6rem;font-size:.7rem;}
+.btn-danger{background:#130a0a;border-color:#2a1414;color:#885555;}
+.btn-danger:hover{background:#1a0d0d;border-color:#443333;color:#ffaaaa;}
+.btn-wa{background:#1a0018;border-color:#4a1111;color:#cc7777;}
+.btn-wa:hover{background:#2a0c0c;border-color:#883333;color:#ffaaaa;}
+.btn-confirm{background:#1a0018;border-color:#5a2020;color:#e87777;}
+.btn-confirm:hover{background:#2a0c0c;border-color:#884444;color:#ffaaaa;}
+.btn-export{background:#161616;border-color:#333;color:#aaaaaa;}
+.btn-export:hover{background:#1e1e1e;border-color:#555;color:#ffffff;}
+.btn-print{background:#1a0018;border-color:#4a1111;color:#cc6666;}
+.btn-print:hover{background:#2a0c0c;border-color:#883333;color:#ff8888;}
+
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:.85rem;margin-bottom:1.3rem;}
+.sc{background:#080808;border:1px solid #141414;border-radius:.55rem;padding:.95rem 1rem;}
+.slbl{font-size:.62rem;color:#777777;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.32rem;font-weight:600;}
+.sval{font-size:1.6rem;font-weight:800;color:#ffffff;line-height:1;letter-spacing:-.02em;}
+.ssub{font-size:.65rem;color:#666666;margin-top:.22rem;}
+
+table{width:100%;border-collapse:collapse;font-size:.81rem;}
+thead tr{border-bottom:1px solid #1a1a1a;}
+th{text-align:left;padding:.55rem .65rem;font-size:.63rem;font-weight:700;color:#888888;text-transform:uppercase;letter-spacing:.1em;}
+td{padding:.75rem .65rem;border-bottom:1px solid #1a1a1a;color:#cccccc;}
+tbody tr:hover{background:#100808;}
+.badge{display:inline-block;padding:.13rem .5rem;border-radius:9999px;font-size:.65rem;font-weight:600;background:#1a1a1a;color:#aaaaaa;border:1px solid #333;}
+.badge-ok{background:#0a1a0a;border-color:#1e3a1e;color:#66aa66;}
+.badge-low{background:#16160a;border-color:#2a2a16;color:#8a8a4a;}
+.badge-zero{background:#160a0a;border-color:#221616;color:#8a4a4a;}
+.badge-conf{background:#1a0018;border-color:#442222;color:#ee8888;}
+.badge-pend{background:#16160a;border-color:#2a2a16;color:#8a8a4a;}
+.badge-comp{background:#0a160a;border-color:#162216;color:#4a8a4a;}
+.badge-nueva{background:#2a0030;border-color:#662020;color:#ff6666;animation:pulse .9s infinite alternate;}
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.85rem;}
+.icard{background:#0a0a0a;border:1px solid #161616;border-radius:.55rem;padding:.95rem;transition:border-color .2s;}
+.icard:hover{border-color:#2a2a2a;}
+.icard h3{color:#ffffff;font-size:.85rem;font-weight:700;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:flex-start;}
+.icard p{font-size:.75rem;color:#888888;margin:.18rem 0;}
+.two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.2rem;}
+.cita-card{background:#0a0a0a;border:1px solid #161616;border-radius:.55rem;padding:1rem 1.15rem;margin-bottom:.6rem;transition:border-color .2s;}
+.cita-card:hover{border-color:#553333;}
+.cita-card.pendiente{border-left:3px solid #cc8800;}
+.cita-card.confirmada{border-left:3px solid #338833;}
+.cita-card.completada{border-left:3px solid #1a2a3a;}
+.cita-card.cancelada{border-left:3px solid #3a1a1a;opacity:.55;}
+.cita-card.nueva{border-left:3px solid #c8004a;background:#0f0015;}
+.cita-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.45rem;}
+.cita-top strong{color:#ffffff;font-size:.9rem;}
+.cita-info p{font-size:.74rem;color:#888888;margin:.12rem 0;}
+.cita-actions{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.65rem;}
+.tc{display:none;}.tc.active{display:block;animation:screenIn .28s ease;}
+
+/* Popups */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:900;display:none;align-items:center;justify-content:center;}
+.overlay.show{display:flex;animation:fadeIn .2s ease;}
+.popup{background:#0d0d0d;border:1px solid #4a1111;border-radius:.9rem;padding:1.85rem;max-width:420px;width:92%;box-shadow:0 30px 80px rgba(0,0,0,.95),0 0 0 1px rgba(224,51,51,.1);animation:fadeUp .25s ease;}
+.popup-ico{font-size:2.25rem;text-align:center;margin-bottom:.85rem;filter:drop-shadow(0 0 8px rgba(224,51,51,.4));}
+.popup h3{font-size:1rem;font-weight:700;color:#ffffff;text-align:center;margin-bottom:.4rem;letter-spacing:-.01em;}
+.popup p{font-size:.8rem;color:#999999;text-align:center;margin-bottom:1.1rem;line-height:1.6;}
+.popup .det{background:#0a0808;border:1px solid #2a1212;border-radius:.45rem;padding:.9rem;margin-bottom:1.1rem;}
+.popup .det div{display:flex;justify-content:space-between;padding:.28rem 0;border-bottom:1px solid #111;}
+.popup .det div:last-child{border:none;}
+.popup .det span:first-child{color:#777777;font-size:.77rem;}
+.popup .det span:last-child{color:#ffffff;font-weight:600;font-size:.77rem;}
+.popup-acts{display:flex;flex-direction:column;gap:.45rem;}
+.pop-close{margin-top:.55rem;text-align:center;cursor:pointer;font-size:.72rem;color:#222;text-decoration:underline;}
+.pop-close:hover{color:#666;}
+.nbadge{display:inline-block;background:#aa7722;color:#000;font-size:.6rem;font-weight:800;padding:.12rem .45rem;border-radius:9999px;margin-left:.4rem;}
+
+.notif-panel{position:fixed;top:58px;right:1.4rem;width:300px;background:#0d0d0d;border:1px solid #2a2a2a;border-radius:.7rem;z-index:300;display:none;box-shadow:0 20px 60px rgba(0,0,0,.95);}
+.notif-panel.show{display:block;}
+.notif-panel h4{padding:.65rem .9rem;font-size:.65rem;color:#c8004a;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid #222;font-weight:700;}
+.ni{padding:.75rem .9rem;border-bottom:1px solid #0d0d0d;cursor:pointer;transition:background .2s;}
+.ni:hover{background:#111;}
+.ni-t{font-size:.77rem;color:#ffffff;font-weight:600;margin-bottom:.15rem;}
+.ni-s{font-size:.68rem;color:#777777;}
+.ne{padding:1.35rem;text-align:center;font-size:.75rem;color:#1e1e1e;}
+
+.rfilters{display:flex;flex-wrap:wrap;gap:.65rem;align-items:flex-end;padding:.85rem;background:#0a0808;border-radius:.45rem;border:1px solid #2a1010;margin-bottom:1rem;}
+.rsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:.6rem;margin-bottom:.85rem;}
+.rkpi{background:#080808;border:1px solid #141414;border-radius:.38rem;padding:.72rem;text-align:center;}
+.rkpi .val{font-size:1.3rem;font-weight:800;color:#ffffff;letter-spacing:-.02em;}
+.rkpi .lbl{font-size:.62rem;color:#777777;text-transform:uppercase;letter-spacing:.08em;margin-top:.18rem;font-weight:600;}
+.ract{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.85rem;}
+
+.link-box{background:#0a0808;border:1px solid #3a1010;border-radius:.45rem;padding:.9rem 1rem;font-size:.77rem;color:#cc7777;word-break:break-all;margin:.65rem 0;cursor:pointer;transition:border-color .2s;font-family:'SF Mono',monospace;}
+.link-box:hover{border-color:#883333;color:#ffaaaa;}
+
+
+/* ══ CALENDARIO ══ */
+.cal-wrap{padding:0;margin:0;}
+
+/* Header del mes */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.cal-header h3{font-size:1.05rem;font-weight:700;color:#ffffff;letter-spacing:.08em;font-family:'Cinzel',serif;text-transform:uppercase;}
+.cal-nav{
+  background:transparent;border:1px solid #333;color:#aaaaaa;
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:700;transition:all .2s;
+}
+.cal-nav:hover{background:#c8004a;color:#fff;border-color:#c8004a;}
+
+/* Grid */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+
+/* Cabecera días semana */
+.cal-dow{
+  text-align:center;font-size:.65rem;font-weight:700;
+  color:#ffffff;text-transform:uppercase;letter-spacing:.08em;
+  padding:.5rem 0;border-bottom:1px solid #333;margin-bottom:2px;
+}
+
+/* Días */
+.cal-day{
+  aspect-ratio:1;border-radius:.45rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.88rem;font-weight:600;color:#ffffff;
+  border:1px solid #2a2a2a;transition:all .2s;position:relative;gap:3px;
+  background:#161616;
+}
+.cal-day:hover:not(.cal-other){background:#2a2a2a;border-color:#555;color:#fff;}
+.cal-day.cal-other{color:#333;cursor:default;background:transparent;border-color:transparent;}
+.cal-day.cal-today{
+  color:#ffffff;font-weight:800;
+  border-color:#c8004a;background:#1a0018;
+  box-shadow:0 0 0 1px #c8004a;
+}
+.cal-day.cal-selected{
+  background:#c8004a!important;color:#fff!important;
+  border-color:#c8004a!important;font-weight:800;
+  box-shadow:0 4px 12px rgba(224,51,51,.4);
+}
+.cal-day.cal-has-citas{
+  background:#1a1212;border-color:#4a2222;color:#ffffff;
+}
+
+/* Puntos de citas */
+.cal-dots{display:flex;gap:2px;justify-content:center;}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:#c8004a;}
+
+/* Panel día seleccionado */
+.cal-day-panel{
+  background:#111;border:1px solid #333;border-radius:.6rem;
+  padding:1.1rem;margin-top:1rem;animation:screenIn .25s ease;
+}
+.cal-day-panel h4{
+  font-size:.85rem;font-weight:700;color:#ffffff;
+  margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;
+  font-family:'Cinzel',serif;letter-spacing:.05em;
+}
+.cal-day-panel h4 span{font-size:.72rem;color:#777;font-weight:400;font-family:'Inter',sans-serif;}
+.time-slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.5rem;}
+.ts-slot{border-radius:.4rem;padding:.55rem .75rem;font-size:.78rem;font-weight:600;display:flex;flex-direction:column;gap:.2rem;border:1px solid transparent;transition:all .2s;}
+.ts-libre{background:#0d1a0d;border-color:#224422;color:#88cc88;cursor:pointer;}
+.ts-libre:hover{background:#1a3a1a;border-color:#449944;color:#aaffaa;}
+.ts-ocupado{background:#1a0d0d;border-color:#442222;color:#cc8888;cursor:default;}
+.ts-cliente{font-size:.68rem;font-weight:400;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Leyenda */
+.cal-legend{display:flex;gap:1.25rem;flex-wrap:wrap;}
+.cal-leg-item{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:#aaaaaa;font-weight:500;}
+.cal-leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+/* Panel de día seleccionado */
+.cal-day-panel{background:#0a0a0a;border:1px solid #2a1010;border-radius:.6rem;padding:1.25rem;margin-top:1rem;animation:screenIn .25s ease;}
+.cal-day-panel h4{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;}
+.cal-day-panel h4 span{font-size:.7rem;color:#555;font-weight:400;}
+.time-slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.5rem;}
+.ts-slot{border-radius:.38rem;padding:.5rem .75rem;font-size:.75rem;font-weight:600;display:flex;flex-direction:column;gap:.15rem;border:1px solid transparent;}
+.ts-libre{background:#0a160a;border-color:#1e3a1e;color:#5a9a5a;cursor:pointer;transition:all .2s;}
+.ts-libre:hover{background:#112211;border-color:#338833;}
+.ts-ocupado{background:#1a0018;border-color:#4a1a1a;color:#884444;cursor:default;}
+.ts-cliente{font-size:.65rem;font-weight:400;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-legend{display:flex;gap:1.25rem;margin-top:1rem;padding-top:.75rem;border-top:1px solid #1a1a1a;}
+.cal-leg-item{display:flex;align-items:center;gap:.4rem;font-size:.68rem;color:#555;}
+.cal-leg-dot{width:8px;height:8px;border-radius:50%;}
+
+
+/* ══ TICKET DE PAGO ══ */
+.ticket-wrap{background:#080808;border:1px solid #2a1010;border-radius:.55rem;padding:1rem;margin:1rem 0;}
+.ticket-header{font-size:.65rem;color:#c8004a;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center;}
+.ticket-item{display:flex;justify-content:space-between;align-items:center;padding:.45rem .5rem;border-radius:.35rem;margin-bottom:.3rem;background:#0f0f0f;border:1px solid #1a1a1a;}
+.ticket-item-name{font-size:.82rem;color:#d0d0d0;}
+.ticket-item-price{font-size:.82rem;color:#fff;font-weight:600;white-space:nowrap;margin-left:.75rem;}
+.ticket-item-del{background:none;border:none;color:#554444;cursor:pointer;font-size:.85rem;padding:.15rem .35rem;border-radius:.25rem;margin-left:.35rem;transition:color .2s;}
+.ticket-item-del:hover{color:#ff6666;}
+.ticket-empty{font-size:.78rem;color:#333;text-align:center;padding:.75rem;font-style:italic;}
+.ticket-total{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #2a1010;padding-top:.65rem;margin-top:.5rem;}
+.ticket-total span:first-child{font-size:.75rem;color:#777;text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+.ticket-total span:last-child{font-size:1.3rem;font-weight:900;color:#c8004a;letter-spacing:-.02em;}
+
+/* Datalist / autocomplete cliente */
+.cliente-select-wrap{position:relative;}
+.clientes-hoy-list{position:absolute;top:100%;left:0;right:0;background:#111;border:1px solid #3a1010;border-radius:.4rem;z-index:50;max-height:200px;overflow-y:auto;display:none;box-shadow:0 8px 24px rgba(0,0,0,.8);}
+.clientes-hoy-list.show{display:block;}
+.cli-option{padding:.6rem .85rem;cursor:pointer;font-size:.83rem;color:#ccc;border-bottom:1px solid #1a1a1a;transition:background .15s;}
+.cli-option:hover{background:#1a0018;color:#fff;}
+.cli-option .cli-hora{font-size:.7rem;color:#555;margin-left:.5rem;}
+.cli-option .cli-srv{font-size:.7rem;color:#443333;display:block;margin-top:.1rem;}
+
+@media(max-width:768px){
+  #demoPage nav{padding:.75rem 1.1rem;}
+  .nav-links a:not(.nav-cta){display:none;}
+  .dsec{padding:3.5rem 1.25rem;}
+  .mbody{grid-template-columns:1fr;}
+  .mside{display:none;}
+  .hdr{flex-direction:column;gap:.65rem;}
+  .wrap{padding:0 1rem;}
+  .srv-grid,.est-grid{grid-template-columns:1fr;}
+  .time-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media print{body{background:#fff;color:#000;}.hdr,.tabs,.btn,.ract,.rfilters{display:none!important;}.card{border:1px solid #ccc;}.tc{display:block!important;}}
+
+/* ── Corporate Dashboard ── */
+.podio-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:.6rem;padding:1rem .75rem;min-width:130px;max-width:180px;flex:1;position:relative;}
+.podio-item.gold{border-color:#3a2a00;background:#0c0900;}
+.podio-item.silver{border-color:#252525;}
+.podio-item.bronze{border-color:#2a1500;}
+.podio-corona{font-size:1.6rem;line-height:1;}
+.podio-pos{font-family:'Cinzel',serif;font-size:.58rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;}
+.podio-pos.gold{color:#c9a84c;}.podio-pos.silver{color:#888;}.podio-pos.bronze{color:#a06020;}
+.podio-suc{font-size:.85rem;font-weight:700;color:#fff;text-align:center;line-height:1.25;margin:.1rem 0;}
+.podio-ing{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:900;color:#c8004a;}
+.podio-sub{font-size:.62rem;color:#333;letter-spacing:.06em;}
+.mvp-wrap{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;background:#080300;border:1px solid #2a1500;border-radius:.7rem;padding:1.75rem;}
+.mvp-ico{font-size:3rem;line-height:1;}
+.mvp-info{flex:1;}
+.mvp-nombre{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:.15rem;line-height:1.2;}
+.mvp-suc{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:#c8004a;font-weight:700;margin-bottom:.85rem;}
+.mvp-stats{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.mvp-stat .val{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:900;color:#fff;}
+.mvp-stat .lbl{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#2a2a2a;font-weight:600;margin-top:.1rem;}
+.corp-bar{height:3px;background:#111;border-radius:2px;margin-top:.35rem;overflow:hidden;}
+.corp-bar-fill{height:100%;background:linear-gradient(90deg,#c8004a,#ff5555);border-radius:2px;}
+
+
+
+/* ── Cal Popup ── */
+#calPopup .cal-grid{gap:3px;}
+#calPopup .cal-day{font-size:.8rem;border-radius:.35rem;}
+#calPopup .cal-dow{font-size:.6rem;padding:.35rem 0;}
+
+/* ── Details/Summary calendario ── */
+details > summary{outline:none;}
+details > summary::-webkit-details-marker{display:none;}
+details[open] > summary{
+  border-radius:.7rem .7rem 0 0 !important;
+  border-bottom:none !important;
+  background:#161616 !important;
+}
+details[open] #calArrow{transform:rotate(180deg);display:inline-block;transition:transform .3s;}
+
+
+/* ── Dropdown citas del día (cobranza) ── */
+.cita-drop-item{
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:.65rem;align-items:center;
+  padding:.75rem .85rem;cursor:pointer;
+  border-bottom:1px solid #141414;transition:background .15s;
+}
+.cita-drop-item:hover{background:#1a0018;}
+.cita-drop-item:last-child{border-bottom:none;}
+.cdi-hora{
+  background:#1a0018;color:#c8004a;font-size:.72rem;font-weight:800;
+  padding:.25rem .5rem;border-radius:.3rem;border:1px solid #3a1010;
+  white-space:nowrap;font-family:'Cinzel',serif;letter-spacing:.05em;
+}
+.cdi-info strong{color:#fff;font-size:.84rem;display:block;margin-bottom:.15rem;}
+.cdi-info span{color:#666;font-size:.72rem;}
+.cdi-precio{color:#c8004a;font-size:.9rem;font-weight:800;white-space:nowrap;}
+.cdi-pagado{color:#4a8a4a;font-size:.68rem;font-weight:600;white-space:nowrap;}
+
+/* ── MARCA DE AGUA ── */
+.watermark{
+  position:fixed;
+  bottom:14px;
+  right:18px;
+  z-index:9999;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9999px;
+  padding:.3rem .85rem .3rem .6rem;
+  opacity:.55;
+  transition:opacity .3s;
+}
+.watermark:hover{opacity:.9;pointer-events:auto;}
+.watermark-dot{
+  border-radius:9999px;
+  background:linear-gradient(135deg,#c8004a,#990000);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:.2rem .45rem;
+  font-size:.58rem;font-weight:800;color:#fff;letter-spacing:.03em;
+  white-space:nowrap;
+}
+.watermark span{
+  font-family:'Inter',sans-serif;
+  font-size:.62rem;
+  font-weight:500;
+  color:rgba(255,255,255,.65);
+  letter-spacing:.04em;
+  white-space:nowrap;
+}
+.watermark strong{
+  color:rgba(255,255,255,.85);
+  font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     PANTALLA DE ACCESO — DEMO
+══════════════════════════════════════ -->
+<div id="demoGate" style="
+  position:fixed;inset:0;z-index:9999;
+  background:#000;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',system-ui,sans-serif;">
+  <div style="width:92%;max-width:380px;text-align:center;">
+
+    <!-- Logo -->
+    <div style="font-family:'Cinzel',Georgia,serif;font-size:2rem;font-weight:900;
+                letter-spacing:.25em;color:#fff;text-transform:uppercase;margin-bottom:.35rem;">
+      LA LOGIA
+    </div>
+    <div style="font-size:.6rem;letter-spacing:.3em;color:#c8004a;text-transform:uppercase;
+                font-weight:700;margin-bottom:2.5rem;">
+      Sistema de Gestión · Demo
+    </div>
+
+    <!-- Card -->
+    <div style="background:#0d0d0d;border:1px solid #2a2a2a;border-radius:.9rem;padding:2rem;">
+      <div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+                  color:#555;margin-bottom:1.5rem;font-weight:600;">
+        Acceso privado · Demo
+      </div>
+
+      <input id="gateUser" type="text" placeholder="Usuario"
+        style="width:100%;padding:.7rem 1rem;background:#080808;border:1px solid #2a2a2a;
+               border-radius:.45rem;color:#e0e0e0;font-size:.95rem;text-align:center;
+               font-family:inherit;margin-bottom:.55rem;outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='#c8004a'"
+        onblur="this.style.borderColor='#2a2a2a'"
+        onkeydown="if(event.key==='Enter')document.getElementById('gateInput').focus()">
+
+      <input id="gateInput" type="password" placeholder="Contraseña"
+        style="width:100%;padding:.7rem 1rem;background:#080808;border:1px solid #2a2a2a;
+               border-radius:.45rem;color:#e0e0e0;font-size:.95rem;text-align:center;
+               font-family:inherit;margin-bottom:.75rem;outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='#c8004a'"
+        onblur="this.style.borderColor='#2a2a2a'"
+        onkeydown="if(event.key==='Enter')verificarClave()">
+
+      <div id="gateError" style="color:#cc4444;font-size:.75rem;min-height:1.1rem;
+                                  margin-bottom:.65rem;display:none;">
+        ✕ Usuario o contraseña incorrectos
+      </div>
+
+      <button onclick="verificarClave()" style="
+        width:100%;padding:.75rem;background:#c8004a;color:#fff;border:none;
+        border-radius:.45rem;font-weight:700;font-size:.9rem;cursor:pointer;
+        font-family:inherit;letter-spacing:.05em;transition:background .2s;"
+        onmouseover="this.style.background='#a80040'"
+        onmouseout="this.style.background='#c8004a'">
+        Entrar →
+      </button>
+    </div>
+
+    <div style="margin-top:1.25rem;font-size:.62rem;color:#1e1e1e;letter-spacing:.1em;">
+      Acceso exclusivo · Solo para presentación
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ── Credenciales válidas SOLO el 18 de Mayo 2026 ──
+  const USUARIO_OK  = 'Admin';
+  const CLAVE_OK    = 'lalogia';
+  const EXPIRA_DIA  = '2026-05-18'; // Cambia esta fecha para renovar acceso
+
+  function accesoValido(){
+    const hoy = new Date().toISOString().split('T')[0];
+    return hoy === EXPIRA_DIA;
+  }
+
+  function verificarClave(){
+    const usuario = document.getElementById('gateUser').value.trim();
+    const clave   = document.getElementById('gateInput').value.trim();
+    const err     = document.getElementById('gateError');
+
+    if(!accesoValido()){
+      document.getElementById('gateError').textContent = '✕ El acceso a esta demo ha expirado';
+      err.style.display='block'; return;
+    }
+    if(usuario === USUARIO_OK && clave === CLAVE_OK){
+      sessionStorage.setItem('logia_demo_ok', EXPIRA_DIA);
+      document.getElementById('demoGate').style.display='none';
+    } else {
+      document.getElementById('gateError').textContent = '✕ Usuario o contraseña incorrectos';
+      err.style.display='block';
+      document.getElementById('gateInput').value='';
+      setTimeout(()=>{ err.style.display='none'; }, 3000);
+    }
+  }
+  window.verificarClave = verificarClave;
+
+  window.addEventListener('DOMContentLoaded',function(){
+    const guardado = sessionStorage.getItem('logia_demo_ok');
+    if(accesoValido() && guardado === EXPIRA_DIA){
+      document.getElementById('demoGate').style.display='none';
+    } else {
+      document.getElementById('gateUser').focus();
+    }
+  });
+})();
+</script>
+
+<!-- ══════════════════════════════════════
+     DEMO / LANDING
+══════════════════════════════════════ -->
+<div id="demoPage" class="screen active">
+  <nav>
+    <span class="nav-brand" style="font-family:'Cinzel',serif;cursor:pointer;" onclick="irDemo()">LA LOGIA</span>
+    <div class="nav-links">
+      <a href="#modulos">Módulos</a>
+      <a href="#booking-sec">Portal</a>
+        <a class="nav-cta" onclick="irSistema()">Ver Demo →</a>
+        <a onclick="doLogout()" style="cursor:pointer;color:#555;font-size:.72rem;letter-spacing:.06em;border:1px solid #1e1e1e;padding:.4rem .9rem;border-radius:.32rem;transition:all .2s;" onmouseover="this.style.color='#fff';this.style.borderColor='#444'" onmouseout="this.style.color='#555';this.style.borderColor='#1e1e1e'">🔒 Cerrar Sesión</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div>
+      <div class="hero-pill">✂️ &nbsp; Sistema de gestión profesional para estilismo</div>
+      <h1 style="font-family:'Cinzel',serif;">LA<br>LOGIA</h1>
+      <p class="tagline">El sistema de gestión creado para <strong style="color:#c8004a;font-style:italic;">La Logia Barberías.</strong><br>Citas, estilistas, inventario, cobranza y reportes — todo en uno.</p>
+      <div class="hero-btns">
+        <button class="btn-hero-p" onclick="irSistema()">🖥 Ver Sistema Completo</button>
+        <button class="btn-hero-s" onclick="irBookingDemo()">📱 Portal de Clientes</button>
+      </div>
+    </div>
+    <div class="hero-scroll">↓ &nbsp; Descubre más</div>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item">Gestión de Citas</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Estilistas</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Inventario Merch</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Cobranza</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">9 Reportes Exportables</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Portal de Clientes</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Notificaciones WhatsApp</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Multi-Sucursal</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Gestión de Citas</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Estilistas</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Inventario Merch</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Cobranza</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">9 Reportes Exportables</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Portal de Clientes</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Notificaciones WhatsApp</span><span style="color:#1a1a1a">·</span>
+      <span class="ticker-item">Multi-Sucursal</span><span style="color:#1a1a1a">·</span>
+    </div>
+  </div>
+
+  <div class="dsec" style="background:#000;padding:3.5rem 2rem;">
+    <div class="dwrap">
+      <div class="stats-row ao">
+        <div class="sbig"><div class="sn">5+</div><div class="sl">Sucursales en un sistema</div></div>
+        <div class="sbig"><div class="sn">9</div><div class="sl">Reportes exportables</div></div>
+        <div class="sbig"><div class="sn">0</div><div class="sl">Instalaciones necesarias</div></div>
+        <div class="sbig"><div class="sn">24h</div><div class="sl">Portal activo para clientes</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dsec" id="modulos">
+    <div class="dwrap">
+      <p class="dlbl ao">Lo que incluye</p>
+      <h2 class="dtitle ao">Todo lo que tu negocio necesita</h2>
+      <p class="dsub ao">Un sistema completo pensado para peluquerías y barberías. Sin instalaciones, sin complicaciones.</p>
+      <div class="mods ao">
+        <div class="mod"><div class="mod-ico">📅</div><div class="mod-t">Gestión de Citas</div><div class="mod-d">Agenda, confirma, reagenda y cancela citas. Filtra por estilista, fecha o estado.</div><div class="mod-tags"><span class="mtag">Estados</span><span class="mtag">Filtros</span><span class="mtag">Historial</span></div></div>
+        <div class="mod"><div class="mod-ico">📱</div><div class="mod-t">Portal de Agendado Online</div><div class="mod-d">Tus clientes agendan solos desde su teléfono. Sin llamadas, sin apps, solo el link.</div><div class="mod-tags"><span class="mtag">Sin login</span><span class="mtag">Móvil</span><span class="mtag">Link único</span></div></div>
+        <div class="mod"><div class="mod-ico">💬</div><div class="mod-t">Integración WhatsApp</div><div class="mod-d">Envía confirmaciones y recordatorios a tus clientes por WhatsApp con un clic.</div><div class="mod-tags"><span class="mtag">Confirmaciones</span><span class="mtag">Recordatorios</span><span class="mtag">Personalizable</span></div></div>
+        <div class="mod"><div class="mod-ico">🔔</div><div class="mod-t">Notificaciones en Tiempo Real</div><div class="mod-d">Popup automático cuando un cliente agenda. Alertas 1 hora antes de cada cita.</div><div class="mod-tags"><span class="mtag">Popups</span><span class="mtag">Recordatorios</span><span class="mtag">Tiempo real</span></div></div>
+        <div class="mod"><div class="mod-ico">👥</div><div class="mod-t">Gestión de Estilistas</div><div class="mod-d">Registra tu equipo con especialidades y experiencia. Asigna citas y mide su rendimiento.</div><div class="mod-tags"><span class="mtag">Perfiles</span><span class="mtag">Especialidades</span><span class="mtag">Rendimiento</span></div></div>
+        <div class="mod"><div class="mod-ico">📦</div><div class="mod-t">Inventario de Merch</div><div class="mod-d">Controla tu stock: shampoos, ceras, ropa, accesorios. Alertas de stock bajo automáticas.</div><div class="mod-tags"><span class="mtag">Stock</span><span class="mtag">Alertas</span><span class="mtag">Merch</span></div></div>
+        <div class="mod"><div class="mod-ico">💰</div><div class="mod-t">Cobranza Completa</div><div class="mod-d">Registra pagos por servicio o merch. Múltiples métodos. Ingresos en tiempo real.</div><div class="mod-tags"><span class="mtag">Multi-método</span><span class="mtag">Ingresos</span><span class="mtag">Pendientes</span></div></div>
+        <div class="mod"><div class="mod-ico">📊</div><div class="mod-t">9 Reportes Exportables</div><div class="mod-d">Citas, ingresos, estilistas, servicios, inventario, métodos de pago y más. CSV y PDF.</div><div class="mod-tags"><span class="mtag">CSV</span><span class="mtag">PDF</span><span class="mtag">Filtros</span></div></div>
+        <div class="mod"><div class="mod-ico">🏢</div><div class="mod-t">Multi-Sucursal</div><div class="mod-d">Cada sucursal tiene su usuario, contraseña y datos completamente independientes.</div><div class="mod-tags"><span class="mtag">5+ sucursales</span><span class="mtag">Acceso propio</span><span class="mtag">Datos privados</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dsec" style="background:#000;">
+    <div class="dwrap">
+      <p class="dlbl ao">Vista previa</p>
+      <h2 class="dtitle ao">Panel de gestión</h2>
+      <div class="mwrap ao">
+        <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">La Logia · Sucursal Centro</div></div>
+        <div class="mbody">
+          <div class="mside">
+            <div class="mni on">📅 Citas</div><div class="mni">👥 Estilistas</div><div class="mni">🪒 Servicios</div>
+            <div class="mni">📦 Inventario</div><div class="mni">💰 Cobranza</div><div class="mni">📊 Reportes</div><div class="mni">⚙️ Config</div>
+          </div>
+          <div class="mcont">
+            <div class="mstats">
+              <div class="mst"><div class="v">8</div><div class="l">Total</div></div>
+              <div class="mst"><div class="v">3</div><div class="l">Hoy</div></div>
+              <div class="mst"><div class="v">2</div><div class="l">Conf.</div></div>
+            </div>
+            <div class="mcard">
+              <div class="mctit">Citas del día</div>
+              <div class="mcita"><h4>Ana López <span style="background:#0a1422;border:1px solid #162233;color:#4a7799;font-size:.58rem;padding:.08rem .35rem;border-radius:9999px;">confirmada</span></h4><p>🪒 Corte clásico · 👤 María García · ⏰ 10:00</p></div>
+              <div class="mcita" style="border-left-color:#aa7722;"><h4>Carlos Pérez <span style="background:#221608;border:1px solid #443308;color:#aa7733;font-size:.58rem;padding:.08rem .35rem;border-radius:9999px;">nueva (portal)</span></h4><p>🪒 Mechas · 👤 Laura Rodríguez · ⏰ 14:30</p></div>
+              <div class="mcita" style="border-left-color:#3a3a00;"><h4>Diana Flores <span style="background:#16160a;border:1px solid #2a2a16;color:#8a8a4a;font-size:.58rem;padding:.08rem .35rem;border-radius:9999px;">pendiente</span></h4><p>🪒 Tinte · 👤 María García · ⏰ 16:00</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:1.4rem;"><button class="btn-hero-p" onclick="irSistema()" style="display:inline-block;">Explorar sistema completo →</button></p>
+    </div>
+  </div>
+
+  <div class="dsec" id="booking-sec">
+    <div class="dwrap">
+      <p class="dlbl ao">Portal de clientes</p>
+      <h2 class="dtitle ao">Tus clientes agendan solos</h2>
+      <p class="dsub ao">Comparte un link y listo. El cliente elige todo en menos de 2 minutos desde su teléfono.</p>
+      <div class="flow-grid ao">
+        <div class="fstep"><div class="fnum">01</div><div class="ftit">Compartes el link</div><div class="fdesc">Tu WhatsApp Business envía automáticamente el link de agendado cuando un cliente escribe.</div></div>
+        <div class="fstep"><div class="fnum">02</div><div class="ftit">El cliente elige</div><div class="fdesc">Servicio, estilista, fecha y horario disponible. Sin login ni apps.</div></div>
+        <div class="fstep"><div class="fnum">03</div><div class="ftit">Confirma por WhatsApp</div><div class="fdesc">Al terminar se abre WhatsApp con los detalles listos para enviar a la sucursal.</div></div>
+        <div class="fstep"><div class="fnum">04</div><div class="ftit">Popup en la sucursal</div><div class="fdesc">Aparece una alerta inmediata en el sistema con todos los datos del cliente.</div></div>
+      </div>
+      <div class="bkmock ao">
+        <div class="bkmh"><h3>LA LOGIA</h3><p>RESERVA TU CITA · SUCURSAL CENTRO</p></div>
+        <div class="bkmb">
+          <div class="bkms">Paso 1 de 5 — Elige tu servicio</div>
+          <div class="bksg">
+            <div class="bksc sel"><h4>Corte clásico</h4><div class="bp">$250</div><div class="bd">⏱ 30 min</div></div>
+            <div class="bksc"><h4>Tinte completo</h4><div class="bp">$450</div><div class="bd">⏱ 90 min</div></div>
+            <div class="bksc"><h4>Mechas</h4><div class="bp">$600</div><div class="bd">⏱ 120 min</div></div>
+            <div class="bksc"><h4>Peinado</h4><div class="bp">$350</div><div class="bd">⏱ 45 min</div></div>
+          </div>
+          <div class="bkwb">Continuar →</div>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:1.35rem;"><button class="btn-hero-s" onclick="irBookingDemo()">Ver portal de clientes →</button></p>
+    </div>
+  </div>
+
+  </div>
+
+
+
+  <footer><p style="font-family:'Cinzel',serif;">LA LOGIA BARBERÍAS · Sistema de Gestión · 2025</p></footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     BOOKING (cliente)
+══════════════════════════════════════ -->
+<div id="bookingPage" class="screen">
+  <div class="bk-hdr" style="display:none;"></div>
+  <div class="bk-wrap">
+    <!-- Logo tipo login -->
+    <div style="text-align:center;margin-bottom:1.75rem;">
+      <h1 style="font-size:1.8rem;font-weight:800;letter-spacing:.2em;color:#ffffff;text-transform:uppercase;font-family:'Cinzel',serif;">LA LOGIA</h1>
+      <p style="font-size:.62rem;color:#c8004a;letter-spacing:.2em;font-weight:700;margin-top:.25rem;text-transform:uppercase;">RESERVA TU CITA</p>
+      <p style="font-size:.7rem;color:#666;margin-top:.4rem;letter-spacing:.1em;">📍 <span id="bkSucNombre" style="color:#aaa;font-weight:600;">—</span></p>
+    </div>
+    <div class="stepper" id="stepper"></div>
+    <div class="bk-card" id="step1"><h2>¿Qué servicio deseas?</h2><p class="sub">Selecciona el servicio que buscas</p><div class="srv-grid" id="bkSrvGrid"></div><div class="bk-nav"><button class="bkb bkb-next" onclick="bkNext(2)" style="margin-top:1rem;">Continuar →</button></div></div>
+    <div class="bk-card" id="step2" style="display:none;"><h2>Elige tu estilista</h2><p class="sub">¿Con quién te gustaría atenderte?</p><div class="est-grid" id="bkEstGrid"></div><div class="bk-nav"><button class="bkb bkb-back" onclick="bkBack(1)">← Atrás</button><button class="bkb bkb-next" onclick="bkNext(3)">Continuar →</button></div></div>
+    <div class="bk-card" id="step3" style="display:none;"><h2>Fecha y hora</h2><p class="sub">Elige cuándo quieres tu cita</p><div class="bk-fg"><div><label>Fecha</label><input type="date" id="bkFecha" onchange="renderTimeSlots()"></div></div><p style="font-size:.68rem;color:#333;margin-bottom:.65rem;text-transform:uppercase;letter-spacing:.08em;">Horarios disponibles</p><div class="time-grid" id="bkTimeGrid"></div><div class="bk-nav" style="margin-top:1.1rem;"><button class="bkb bkb-back" onclick="bkBack(2)">← Atrás</button><button class="bkb bkb-next" onclick="bkNext(4)">Continuar →</button></div></div>
+    <div class="bk-card" id="step4" style="display:none;"><h2>Tus datos</h2><p class="sub">Para confirmarte por WhatsApp</p><div class="bk-fg"><div><label>Nombre completo *</label><input id="bkNombre" type="text" placeholder="Tu nombre completo"></div><div><label>Teléfono WhatsApp *</label><input id="bkTel" type="tel" placeholder="+52 55 0000 0000"></div><div><label>Notas adicionales</label><textarea id="bkNotas" rows="2" placeholder="Indicaciones especiales..."></textarea></div></div><div class="bk-nav"><button class="bkb bkb-back" onclick="bkBack(3)">← Atrás</button><button class="bkb bkb-next" onclick="bkNext(5)">Ver resumen →</button></div></div>
+    <div class="bk-card" id="step5" style="display:none;"><h2>Resumen de tu cita</h2><p class="sub">Verifica los detalles antes de confirmar</p><div class="resumen" id="bkResumen"></div><button class="bkb-wa" onclick="confirmarCita()">✅ Confirmar Cita</button><div class="bk-nav"><button class="bkb bkb-back" onclick="bkBack(4)">← Atrás</button></div></div>
+    <div class="bk-card" id="step6" style="display:none;"><div class="confirm-ico">✅</div><h2 style="text-align:center;margin-bottom:.5rem;">¡Cita Confirmada!</h2><p class="confirm-msg" id="bkConfMsg"></p><div class="resumen" id="bkResFinal"></div><button class="bkb-wa" id="bkWaFinal">💬 Enviar detalles de mi cita por WhatsApp</button><p style="font-size:.7rem;color:#222;text-align:center;margin-top:.9rem;">Recibirás confirmación pronto.</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LOGIN
+══════════════════════════════════════ -->
+<div id="loginScreen" class="screen">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+    <!-- Imagen de fondo institucional La Logia -->
+    <div style="position:absolute;inset:0;background:url('https://lalogiabarberias.com/img/portadaWeCan-C.jpg') center/cover no-repeat;filter:brightness(.18) saturate(1.2);z-index:0;"></div>
+    <!-- Overlay degradado -->
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.85) 0%,rgba(20,0,15,.9) 100%);z-index:1;"></div>
+    <div class="lbox" style="position:relative;z-index:2;">
+      <h1 style="font-family:'Cinzel',serif;font-size:2rem;font-weight:800;letter-spacing:.2em;color:#fff;text-transform:uppercase;line-height:1;margin-bottom:.5rem;">LA LOGIA</h1>
+      <p class="lsub">SISTEMA DE GESTIÓN</p>
+      <a class="back-demo" onclick="irDemo()">← Volver a la presentación</a>
+      <label>Usuario</label><input id="lU" type="text" placeholder="Usuario" onkeydown="if(event.key==='Enter')doLogin()">
+      <label>Contraseña</label><input id="lP" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="lbtn" onclick="doLogin()">INGRESAR</button>
+      <p class="lerr" id="lErr">Usuario o contraseña incorrectos</p>
+      <div class="demo-hint">
+        <h4>Sucursales — clic para autocompletar</h4>
+        <div class="ditem" onclick="fill('admin','Admin2025!')"><span>🔑 Corporativo</span><span>Admin</span></div>
+        <div class="ditem" onclick="fill('logia_condesa','Condesa123#')"><span>📍 Condesa</span><span>logia_condesa</span></div>
+        <div class="ditem" onclick="fill('logia_roma','Roma456@')"><span>📍 Roma Norte</span><span>logia_roma</span></div>
+        <div class="ditem" onclick="fill('logia_romasur','RomaSur111#')"><span>📍 Roma Sur</span><span>logia_romasur</span></div>
+        <div class="ditem" onclick="fill('logia_polanco','Polanco789$')"><span>📍 Polanco</span><span>logia_polanco</span></div>
+        <div class="ditem" onclick="fill('logia_reforma','Reforma321!')"><span>📍 Reforma</span><span>logia_reforma</span></div>
+        <div class="ditem" onclick="fill('logia_sanrafael','SanRafael654!')"><span>📍 San Rafael</span><span>logia_sanrafael</span></div>
+        <div class="ditem" onclick="fill('logia_circuito','Circuito987@')"><span>📍 Circuito Interior</span><span>logia_circuito</span></div>
+        <div class="ditem" onclick="fill('logia_slp','SanLuis222!')"><span>📍 SLP Plaza Covalia</span><span>logia_slp</span></div>
+        <div class="ditem" onclick="fill('logia_veracruz','Veracruz333@')"><span>📍 Veracruz</span><span>logia_veracruz</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP (gestión)
+══════════════════════════════════════ -->
+<div id="appScreen" class="screen">
+  <div class="hdr">
+    <div class="hdr-brand" onclick="irDemo()" title="Ir a la presentación" style="cursor:pointer;">
+      <h1 style="font-family:'Cinzel',serif;">LA LOGIA</h1>
+      <p id="hdrSub">SISTEMA DE GESTIÓN</p>
+    </div>
+    <div class="hdr-r">
+      <div class="suc-pill">📍 <b id="hdrSuc">—</b></div>
+      <div class="bell-wrap" onclick="toggleNotif()"><div class="bell-btn">🔔</div><div class="bell-badge" id="bellBadge">0</div></div>
+      <button class="out-btn" onclick="doLogout()">🔒 Cerrar Sesión</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tbb active" onclick="openTab('citas',this)">📅 Citas</button>
+    <button class="tbb" onclick="openTab('estilistas',this)">👥 Estilistas</button>
+    <button class="tbb" onclick="openTab('servicios',this)">🪒 Servicios</button>
+    <button class="tbb" onclick="openTab('inventario',this)">📦 Inventario</button>
+    <button class="tbb" onclick="openTab('cobranza',this)">💰 Cobranza</button>
+    <button class="tbb" onclick="openTab('reportes',this)">📊 Reportes</button>
+    <button class="tbb" onclick="openTab('config',this)">⚙️ Config</button>
+  </div>
+  <div class="wrap">
+    <div id="citas" class="tc active">
+      <div class="sg" id="citasStats"></div>
+
+                        <div class="card"><h2>➕ Nueva Cita</h2>
+        <div class="fg">
+          <div class="fgrp"><label>Cliente</label><input id="cNombre" type="text" placeholder="Nombre completo"></div>
+          <div class="fgrp"><label>Teléfono WhatsApp</label><input id="cTel" type="tel" placeholder="+52 55 0000 0000"></div>
+          <div class="fgrp"><label>Servicio</label><select id="cSrv"></select></div>
+          <div class="fgrp">
+            <label>Estilista</label>
+            <select id="cEst" onchange="checkDisponibilidad();if(calPopupAbierto){const f=document.getElementById('cFecha')?.value;if(f)renderDayPanelPopup(f);}"></select>
+          </div>
+          <div class="fgrp" style="position:relative;">
+            <label>Fecha</label>
+            <div style="display:flex;gap:.4rem;">
+              <input id="cFecha" type="date" oninput="if(calPopupAbierto)renderCalPopup()" style="flex:1;">
+              <button type="button" onclick="toggleCalPopup()"
+                style="background:#1a0018;border:1px solid #c8004a;border-radius:.38rem;
+                       padding:0 .75rem;cursor:pointer;color:#c8004a;font-size:1rem;
+                       transition:all .2s;flex-shrink:0;"
+                title="Ver disponibilidad">
+                📅
+              </button>
+            </div>
+            <!-- Popup calendario -->
+            <div id="calPopup" style="
+              display:none;position:absolute;top:100%;right:0;z-index:500;
+              background:#111;border:1px solid #333;border-radius:.7rem;
+              padding:1.1rem;width:320px;margin-top:.4rem;
+              box-shadow:0 20px 50px rgba(0,0,0,.9);animation:screenIn .2s ease;">
+              <div class="cal-header" style="margin-bottom:.85rem;">
+                <button class="cal-nav" type="button" onclick="calMes(-1);renderCalPopup();">‹</button>
+                <h3 id="calTituloP" style="font-family:'Cinzel',serif;font-size:.88rem;color:#fff;"></h3>
+                <button class="cal-nav" type="button" onclick="calMes(1);renderCalPopup();">›</button>
+              </div>
+              <div class="cal-grid" id="calGridP"></div>
+              <div id="calDayPanelP" style="margin-top:.75rem;"></div>
+              <div class="cal-legend" style="margin-top:.75rem;padding-top:.65rem;border-top:1px solid #222;">
+                <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#c8004a;"></div>Hoy</div>
+                <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#4a2222;border:1px solid #884444;"></div>Con citas</div>
+                <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#4a8a4a;"></div>Libre</div>
+              </div>
+            </div>
+          </div>
+          <div class="fgrp">
+            <label>Hora</label>
+            <input id="cHora" type="time" oninput="checkDisponibilidad()">
+          </div>
+          <div class="fgrp"><label>Notas</label><input id="cNotas" type="text" placeholder="Indicaciones especiales..."></div>
+        </div>
+        <!-- Alerta de disponibilidad en tiempo real -->
+        <div id="disponibilidadAlert"
+          style="display:none;background:#1a0018;border:1px solid #cc3333;
+                 border-radius:.4rem;padding:.75rem 1rem;margin-top:.5rem;
+                 font-size:.8rem;color:#ffaaaa;line-height:1.5;">
+        </div>
+        <button class="btn btn-full" onclick="addCita()">📅 Agendar Cita</button>
+      </div>
+      <div class="card"><h2>📋 Citas Agendadas</h2>
+        <div style="display:flex;gap:.55rem;margin-bottom:.9rem;flex-wrap:wrap;">
+          <select id="filtEst" onchange="renderCitas()" style="width:auto;flex:1;min-width:130px;"><option value="">Todos los estados</option><option value="nueva">🟠 Nueva (portal)</option><option value="pendiente">Pendiente</option><option value="confirmada">Confirmada</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select>
+          <input type="date" id="filtFecha" onchange="renderCitas()" style="width:auto;flex:1;min-width:130px;">
+          <button class="btn btn-sm" onclick="document.getElementById('filtFecha').value='';document.getElementById('filtEst').value='';renderCitas();">✕</button>
+        </div>
+        <div id="listaCitas"></div>
+      </div>
+    </div>
+    <div id="estilistas" class="tc">
+      <div class="card"><h2>➕ Nuevo Estilista</h2>
+        <div class="fg">
+          <div class="fgrp"><label>Nombre</label><input id="eN" type="text" placeholder="Nombre completo"></div>
+          <div class="fgrp"><label>Especialidad</label><input id="eE" type="text" placeholder="Cortes, tintes, etc."></div>
+          <div class="fgrp"><label>Teléfono</label><input id="eT" type="tel" placeholder="+52 55 0000 0000"></div>
+          <div class="fgrp"><label>Experiencia</label><input id="eX" type="text" placeholder="Ej: 5 años"></div>
+        </div>
+        <button class="btn btn-full" onclick="addEstilista()">➕ Agregar</button>
+      </div>
+      <div class="card"><h2>👥 Equipo</h2><div class="ig" id="listaEst"></div></div>
+    </div>
+    <div id="servicios" class="tc">
+      <div class="card"><h2>➕ Nuevo Servicio</h2>
+        <div class="fg">
+          <div class="fgrp"><label>Nombre</label><input id="sN" type="text" placeholder="Ej: Corte clásico"></div>
+          <div class="fgrp"><label>Precio ($)</label><input id="sP" type="number" placeholder="0.00" step="0.01"></div>
+          <div class="fgrp"><label>Duración (min)</label><input id="sD" type="number" placeholder="30"></div>
+        </div>
+        <button class="btn btn-full" onclick="addServicio()">➕ Agregar</button>
+      </div>
+      <div class="card"><h2>📋 Catálogo</h2><table><thead><tr><th>Servicio</th><th>Precio</th><th>Duración</th><th></th></tr></thead><tbody id="listaSrv"></tbody></table></div>
+    </div>
+    <div id="inventario" class="tc">
+      <div class="sg" id="invStats"></div>
+      <div class="card"><h2>➕ Agregar Producto</h2>
+        <div class="fg">
+          <div class="fgrp"><label>Nombre</label><input id="iN" type="text"></div>
+          <div class="fgrp"><label>Categoría</label><select id="iCat"><option>Shampoo</option><option>Acondicionador</option><option>Tratamiento</option><option>Cera / Gel</option><option>Ropa / Merch</option><option>Accesorios</option><option>Herramientas</option><option>Otro</option></select></div>
+          <div class="fgrp"><label>SKU</label><input id="iSku" type="text"></div>
+          <div class="fgrp"><label>Precio Venta ($)</label><input id="iPv" type="number" step="0.01"></div>
+          <div class="fgrp"><label>Precio Costo ($)</label><input id="iPc" type="number" step="0.01"></div>
+          <div class="fgrp"><label>Stock Inicial</label><input id="iSt" type="number"></div>
+          <div class="fgrp"><label>Stock Mínimo</label><input id="iMn" type="number"></div>
+        </div>
+        <button class="btn btn-full" onclick="addProducto()">➕ Agregar</button>
+      </div>
+      <div class="two-col">
+        <div class="card"><h2>📥 Entrada / Salida</h2>
+          <div class="fgrp" style="margin-bottom:.65rem;"><label>Producto</label><select id="iAjP"></select></div>
+          <div class="fgrp" style="margin-bottom:.65rem;"><label>Movimiento</label><select id="iAjT"><option value="entrada">📥 Entrada</option><option value="salida">📤 Salida</option></select></div>
+          <div class="fgrp" style="margin-bottom:.65rem;"><label>Cantidad</label><input id="iAjQ" type="number" min="1"></div>
+          <button class="btn btn-full" onclick="ajustarStock()">Registrar</button>
+        </div>
+        <div class="card"><h2>⚠️ Stock Bajo</h2><div id="invBajo"></div></div>
+      </div>
+      <div class="card"><h2>📦 Inventario Completo</h2><table><thead><tr><th>Producto</th><th>SKU</th><th>Categoría</th><th>Venta</th><th>Costo</th><th>Margen</th><th>Stock</th><th></th></tr></thead><tbody id="listaInv"></tbody></table></div>
+    </div>
+    <div id="cobranza" class="tc">
+      <div class="sg">
+        <div class="sc"><div class="slbl">📈 Total</div><div class="sval" id="cobT">$0</div><div class="ssub" id="cobTS">0 pagos</div></div>
+        <div class="sc"><div class="slbl">📅 Hoy</div><div class="sval" id="cobH">$0</div></div>
+        <div class="sc"><div class="slbl">🗓 Mes</div><div class="sval" id="cobM">$0</div></div>
+        <div class="sc"><div class="slbl">📋 Citas</div><div class="sval" id="cobC">0</div></div>
+        <div class="sc"><div class="slbl">⚠️ Sin Pagar</div><div class="sval" id="cobP">0</div></div>
+      </div>
+      <div class="card"><h2>➕ Registrar Pago</h2>
+
+        <!-- Cliente desde reservaciones del día -->
+        <!-- ── Cliente del día ── -->
+        <div style="margin-bottom:.9rem;">
+          <label style="font-size:.67rem;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.4rem;">
+            Cliente
+          </label>
+          <div style="display:flex;gap:.4rem;position:relative;">
+            <input id="pCl" type="text" placeholder="Nombre del cliente..."
+              autocomplete="off" style="flex:1;"
+              oninput="filtrarClientesHoy()" onfocus="abrirDropCitas()">
+            <button type="button" onclick="abrirDropCitas()"
+              style="background:#1a0018;border:1px solid #c8004a;border-radius:.38rem;
+                     padding:0 .9rem;cursor:pointer;color:#c8004a;font-size:.82rem;
+                     font-weight:700;white-space:nowrap;transition:all .2s;flex-shrink:0;"
+              title="Ver citas del día">
+              📋 Citas del día
+            </button>
+          </div>
+
+          <!-- Dropdown de citas del día -->
+          <div id="dropCitas" style="
+            display:none;background:#111;border:1px solid #3a1010;
+            border-radius:.55rem;margin-top:.35rem;
+            box-shadow:0 12px 35px rgba(0,0,0,.8);overflow:hidden;z-index:100;position:relative;">
+
+            <div style="padding:.55rem .85rem;background:#0d0d0d;border-bottom:1px solid #1e1e1e;
+                        display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:.68rem;font-weight:700;color:#c8004a;text-transform:uppercase;letter-spacing:.1em;">
+                Citas de hoy
+              </span>
+              <span id="dropCitasCount" style="font-size:.68rem;color:#555;"></span>
+            </div>
+
+            <div id="dropCitasList" style="max-height:280px;overflow-y:auto;"></div>
+
+            <div style="padding:.5rem .85rem;background:#0d0d0d;border-top:1px solid #1e1e1e;">
+              <span style="font-size:.65rem;color:#444;">Clic en una cita para cargar automáticamente</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agregar items al ticket -->
+        <div style="background:#0d0d0d;border:1px solid #222;border-radius:.5rem;padding:1rem;margin-bottom:.75rem;">
+          <p style="font-size:.68rem;color:#888;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:.75rem;">
+            ➕ Agregar extra a la cuenta
+            <span style="color:#444;font-weight:400;font-size:.65rem;display:block;margin-top:.2rem;text-transform:none;letter-spacing:0;">
+              El servicio de la cita se carga automáticamente — agrega aquí lo adicional
+            </span>
+          </p>
+          <div class="fg">
+            <div class="fgrp">
+              <label>Tipo</label>
+              <select id="pTipo" onchange="actualizarItemsDisp()">
+                <option value="servicio">Servicio</option>
+                <option value="merch">Producto / Merch</option>
+                <option value="manual">Monto manual</option>
+              </select>
+            </div>
+            <div class="fgrp" id="pItemWrap">
+              <label>Servicio</label>
+              <select id="pItem" onchange="actualizarPrecioItem()"></select>
+            </div>
+            <div class="fgrp">
+              <label>Precio ($)</label>
+              <input id="pItemPrecio" type="number" step="0.01" placeholder="0.00">
+            </div>
+            <div class="fgrp" style="justify-content:flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn" onclick="addItemTicket()" style="margin-top:0;background:#c8004a;color:#fff;border-color:#a80040;">➕ Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket actual -->
+        <div class="ticket-wrap">
+          <div class="ticket-header">
+            <span>🧾 Cuenta</span>
+            <span id="ticketCount" style="color:#555;">0 items</span>
+          </div>
+          <div id="ticketItems"><div class="ticket-empty">Agrega servicios o productos a la cuenta</div></div>
+          <div class="ticket-total">
+            <span>Total</span>
+            <span id="ticketTotal">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Método y fecha -->
+        <div class="fg">
+          <div class="fgrp">
+            <label>Método de Pago</label>
+            <select id="pMe"><option>Efectivo</option><option>Tarjeta de Crédito</option><option>Tarjeta de Débito</option><option>Transferencia</option><option>Billetera Digital</option></select>
+          </div>
+          <div class="fgrp"><label>Fecha</label><input id="pFe" type="date"></div>
+          <div class="fgrp"><label>Hora</label><input id="pHo" type="time"></div>
+        </div>
+
+        <button class="btn btn-full" onclick="mostrarResumenPago()" style="background:#c8004a;color:#fff;border-color:#a80040;font-size:.95rem;padding:.85rem;letter-spacing:.03em;">🧾 Ver Resumen y Pagar</button>
+        <button class="btn btn-full" onclick="limpiarTicket()" style="margin-top:.4rem;color:#555;">✕ Limpiar cuenta</button>
+      </div>
+      <div class="two-col">
+        <div class="card"><h2>💳 Por Método</h2><div id="cobMet"></div></div>
+        <div class="card"><h2>⚠️ Sin Pagar</h2><div id="cobPDiv"></div></div>
+      </div>
+      <div class="card"><h2>📋 Historial</h2><table><thead><tr><th>Cliente</th><th>Monto</th><th>Concepto</th><th>Método</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody id="listaPagos"></tbody></table></div>
+    </div>
+    <div id="reportes" class="tc">
+
+      <!-- ══ DASHBOARD CORPORATIVO — solo admin ══ -->
+      <div id="corpDash" style="display:none;">
+
+        <!-- KPIs red completa -->
+        <div class="card">
+          <h2 style="display:flex;align-items:center;gap:.5rem;">
+            🏴 Red Completa · <span style="color:#333;font-size:.75rem;font-weight:400;font-family:'DM Sans',sans-serif;" id="corpFecha"></span>
+          </h2>
+          <div class="rsum" id="corpKpis"></div>
+        </div>
+
+        <!-- Ranking sucursales -->
+        <div class="card">
+          <h2>🏆 Ranking de Sucursales</h2>
+          <p style="font-size:.75rem;color:#333;margin-bottom:1.25rem;">Por ingresos generados. Solo sucursales con actividad registrada.</p>
+
+          <!-- Podio top 3 -->
+          <div id="corpPodio" style="display:flex;align-items:flex-end;justify-content:center;gap:.75rem;margin-bottom:2rem;flex-wrap:wrap;"></div>
+
+          <!-- Tabla completa -->
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Sucursal</th>
+                <th>Ingresos</th>
+                <th>Citas</th>
+                <th>Ticket Prom.</th>
+                <th>Estilistas</th>
+                <th>Rendimiento</th>
+              </tr>
+            </thead>
+            <tbody id="corpRankBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Mejor estilista de la red -->
+        <div class="card" id="corpMvpCard">
+          <h2>💈 El Mejor de la Manada</h2>
+          <div id="corpMvp"></div>
+        </div>
+
+        <!-- Top 5 estilistas red -->
+        <div class="card">
+          <h2>🥇 Top Estilistas · Toda la Red</h2>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Estilista</th><th>Sucursal</th><th>Especialidad</th><th>Citas</th><th>Ingresos</th><th>Ticket Prom.</th></tr>
+            </thead>
+            <tbody id="corpTopEst"></tbody>
+          </table>
+        </div>
+
+        <div style="border-top:1px solid #0d0d0d;margin:0 0 1.5rem;"></div>
+        <p style="color:#1a1a1a;font-size:.65rem;text-align:center;margin-bottom:2rem;letter-spacing:.1em;">LA LOGIA BARBERÍAS · REPORTE CORPORATIVO</p>
+      </div>
+      <!-- ══ fin corpDash ══ -->
+      <div class="card"><h2>🔍 Filtros</h2>
+        <div class="rfilters">
+          <div class="fgrp"><label>Desde</label><input type="date" id="rIni"></div>
+          <div class="fgrp"><label>Hasta</label><input type="date" id="rFin"></div>
+          <div class="fgrp"><label>Estilista</label><select id="rEst"><option value="">Todos</option></select></div>
+          <div class="fgrp"><label>Período</label><select id="rPer" onchange="setPer()"><option value="">Personalizado</option><option value="hoy">Hoy</option><option value="sem">Esta semana</option><option value="mes">Este mes</option><option value="mes_ant">Mes anterior</option><option value="todo">Todo</option></select></div>
+          <button class="btn" onclick="genReportes()">🔄 Generar</button>
+        </div>
+      </div>
+      <div class="card"><h2>📊 1. Resumen — <span id="rTit" style="color:#333;text-transform:none;font-size:.8rem;"></span></h2><div class="ract"><button class="btn btn-export" onclick="expCSV('resumen')">⬇ CSV</button><button class="btn btn-print" onclick="impR('resumen')">🖨 PDF</button></div><div class="rsum" id="rResKpi"></div></div>
+      <div class="card"><h2>📅 2. Citas</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('citas')">⬇ CSV</button><button class="btn btn-print" onclick="impR('citas')">🖨 PDF</button></div><div class="rsum" id="rCitKpi"></div><table><thead><tr><th>Fecha</th><th>Hora</th><th>Cliente</th><th>Tel</th><th>Servicio</th><th>Estilista</th><th>Estado</th><th>Origen</th><th>Precio</th></tr></thead><tbody id="rCitBody"></tbody></table></div>
+      <div class="card"><h2>💰 3. Ingresos</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('ingresos')">⬇ CSV</button><button class="btn btn-print" onclick="impR('ingresos')">🖨 PDF</button></div><div class="rsum" id="rIngKpi"></div><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Concepto</th><th>Método</th><th>Monto</th></tr></thead><tbody id="rIngBody"></tbody></table></div>
+      <div class="card"><h2>👥 4. Estilistas</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('estilistas')">⬇ CSV</button><button class="btn btn-print" onclick="impR('estilistas')">🖨 PDF</button></div><table><thead><tr><th>Estilista</th><th>Especialidad</th><th>Citas</th><th>Conf.</th><th>Comp.</th><th>Ingresos</th><th>Ticket</th></tr></thead><tbody id="rEstBody"></tbody></table></div>
+      <div class="card"><h2>🪒 5. Servicios</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('servicios')">⬇ CSV</button><button class="btn btn-print" onclick="impR('servicios')">🖨 PDF</button></div><table><thead><tr><th>Servicio</th><th>Precio</th><th>Veces</th><th>Ingresos</th><th>%</th></tr></thead><tbody id="rSrvBody"></tbody></table></div>
+      <div class="card"><h2>📦 6. Inventario</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('inventario')">⬇ CSV</button><button class="btn btn-print" onclick="impR('inventario')">🖨 PDF</button></div><div class="rsum" id="rInvKpi"></div><table><thead><tr><th>Producto</th><th>Stock</th><th>Estado</th><th>Venta</th><th>Costo</th><th>Margen</th><th>Valor</th></tr></thead><tbody id="rInvBody"></tbody></table></div>
+      <div class="card"><h2>💳 7. Métodos de Pago</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('metodos')">⬇ CSV</button><button class="btn btn-print" onclick="impR('metodos')">🖨 PDF</button></div><table><thead><tr><th>Método</th><th>Trans.</th><th>Total</th><th>%</th><th>Promedio</th></tr></thead><tbody id="rMetBody"></tbody></table></div>
+      <div class="card"><h2>⚠️ 8. Pendientes de Pago</h2><div class="ract"><button class="btn btn-export" onclick="expCSV('pendientes')">⬇ CSV</button><button class="btn btn-print" onclick="impR('pendientes')">🖨 PDF</button></div><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Estilista</th><th>Monto</th></tr></thead><tbody id="rPenBody"></tbody></table></div>
+      <p style="color:#1a1a1a;font-size:.7rem;text-align:center;padding-bottom:2rem;">La Logia · <span id="rSuc">—</span></p>
+    </div>
+    <div id="config" class="tc">
+      <div class="card"><h2>🔗 Link de Agendado para Clientes</h2>
+        <p style="font-size:.8rem;color:#444;margin-bottom:.9rem;line-height:1.6;">Comparte este link con tus clientes. Al abrirlo podrán agendar sin necesidad de ingresar al sistema.</p>
+        <div class="link-box" id="bookingLink" onclick="copiarLink()" title="Clic para copiar"></div>
+        <div style="display:flex;gap:.55rem;margin-top:.65rem;flex-wrap:wrap;">
+          <button class="btn" onclick="copiarLink()">📋 Copiar Link</button>
+          <button class="btn btn-wa" id="cfgWABtn">📱 Generar mensaje WhatsApp</button>
+          <button class="btn" onclick="verPortal()">👁 Vista previa</button>
+        </div>
+        <div id="waMsgBox" style="display:none;margin-top:.9rem;">
+          <p style="font-size:.68rem;color:#444;margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.08em;">Mensaje para WhatsApp Business (auto-respuesta):</p>
+          <textarea id="waMsgText" rows="5" style="background:#080808;border:1px solid #1a1a1a;color:#666;font-size:.8rem;line-height:1.5;" readonly></textarea>
+          <button class="btn" style="margin-top:.45rem;" onclick="copiarWAMsg()">📋 Copiar mensaje</button>
+        </div>
+      </div>
+      <div class="card"><h2>⚙️ Configuración</h2>
+
+        <!-- ALERTA si está corriendo desde archivo local -->
+        <div id="localFileAlert" style="display:none;background:#1a1000;border:1px solid #4a3000;border-radius:.5rem;padding:1rem;margin-bottom:1rem;">
+          <p style="font-size:.82rem;color:#cc8800;font-weight:600;margin-bottom:.4rem;">⚠️ Estás abriendo el sistema desde tu computadora (archivo local)</p>
+          <p style="font-size:.78rem;color:#886600;line-height:1.6;">Para que el link de agendado funcione cuando lo mandes a tus clientes, necesitas subir el archivo a un servidor web. Ingresa la URL pública abajo.</p>
+        </div>
+
+        <div class="fg">
+          <div class="fgrp"><label>Sucursal</label><input id="cfgNombre" type="text" readonly style="color:#333;cursor:not-allowed;"></div>
+          <div class="fgrp" style="grid-column:1/-1;">
+            <label>🌐 URL pública del sistema (donde está subido el archivo)</label>
+            <input id="cfgBaseURL" type="url" placeholder="https://tusitio.com/la-logia.html" oninput="guardarBaseURL()" style="font-family:'SF Mono',monospace;font-size:.82rem;">
+            <p style="font-size:.7rem;color:#555;margin-top:.3rem;">El link de agendado para tus clientes se construye con esta URL. <span id="cfgURLPreview" style="color:#c8004a;"></span></p>
+          </div>
+          <div class="fgrp"><label>WhatsApp Sucursal (con código país)</label><input id="cfgWA" type="tel" placeholder="5215500000000" oninput="guardarConfig()"></div>
+          <div class="fgrp"><label>Recordatorio antes de la cita</label><select id="cfgMin" onchange="guardarConfig()"><option value="30">30 min antes</option><option value="60" selected>1 hora antes</option><option value="120">2 horas antes</option></select></div>
+          <div class="fgrp"><label>Msg. Confirmación (variables: {nombre} {servicio} {estilista} {fecha} {hora} {sucursal})</label><textarea id="cfgMsgConf" rows="3" style="resize:vertical;" oninput="guardarConfig()"></textarea></div>
+          <div class="fgrp"><label>Msg. Recordatorio</label><textarea id="cfgMsgRec" rows="3" style="resize:vertical;" oninput="guardarConfig()"></textarea></div>
+        </div>
+      </div>
+      <div class="card"><h2>👤 Usuarios Demo</h2><table><thead><tr><th>Usuario</th><th>Sucursal</th><th>Rol</th></tr></thead><tbody id="cfgUsers"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- Popups -->
+<div class="overlay" id="popNueva"><div class="popup"><div class="popup-ico">🔔</div><h3>¡Nueva Cita! <span class="nbadge">PORTAL</span></h3><p>Un cliente agendó desde el portal de reservas.</p><div class="det" id="popNuevaDet"></div><div class="popup-acts"><button class="btn btn-confirm btn-full" id="popNuevaConf">✓ Confirmar + WhatsApp al cliente</button><button class="btn btn-wa btn-full" id="popNuevaWA">📱 Solo enviar WhatsApp</button><button class="btn btn-full" onclick="cerrarPop('popNueva')">Cerrar</button></div><p class="pop-close" onclick="cerrarPop('popNueva')">revisar después</p></div></div>
+<div class="overlay" id="popAgendada"><div class="popup"><div class="popup-ico">📅</div><h3>¡Cita Agendada!</h3><p>La cita fue registrada en el sistema.</p><div class="det" id="popAgendadaDet"></div><div class="popup-acts"><button class="btn btn-wa btn-full" id="popAgendadaWA">📱 Enviar confirmación por WhatsApp</button><button class="btn btn-full" onclick="cerrarPop('popAgendada')">✓ Cerrar</button></div></div></div>
+<div class="overlay" id="popRec"><div class="popup"><div class="popup-ico">⏰</div><h3>Recordatorio de Cita</h3><p>Una cita comienza en <strong style="color:#fff;">aproximadamente 1 hora</strong>.</p><div class="det" id="popRecDet"></div><div class="popup-acts"><button class="btn btn-wa btn-full" id="popRecWA">📱 Enviar recordatorio por WhatsApp</button><button class="btn btn-confirm btn-full" id="popRecConf">✓ Marcar como Confirmada</button><button class="btn btn-full" onclick="cerrarPop('popRec')">Cerrar</button></div></div></div>
+<div class="notif-panel" id="notifPanel"><h4>🔔 Notificaciones</h4><div id="notifList"><div class="ne">Sin notificaciones</div></div></div>
+
+<script>
+/* ══════════════════════
+   DATOS BASE
+══════════════════════ */
+const USERS={
+  admin:             {pass:'Admin2025!',   suc:'Administración',       rol:'admin', key:'admin'},
+  logia_condesa:     {pass:'Condesa123#',  suc:'Condesa',              rol:'staff', key:'logia_condesa'},
+  logia_roma:        {pass:'Roma456@',     suc:'Roma Norte',           rol:'staff', key:'logia_roma'},
+  logia_polanco:     {pass:'Polanco789$',  suc:'Polanco',              rol:'staff', key:'logia_polanco'},
+  logia_reforma:     {pass:'Reforma321!',  suc:'Reforma',              rol:'staff', key:'logia_reforma'},
+  logia_sanrafael:   {pass:'SanRafael654!',suc:'San Rafael',           rol:'staff', key:'logia_sanrafael'},
+  logia_circuito:    {pass:'Circuito987@', suc:'Circuito Interior',    rol:'staff', key:'logia_circuito'},
+  logia_romasur:     {pass:'RomaSur111#',  suc:'Roma Sur',             rol:'staff', key:'logia_romasur'},
+  logia_slp:         {pass:'SanLuis222!',  suc:'SLP Plaza Covalia',    rol:'staff', key:'logia_slp'},
+  logia_veracruz:    {pass:'Veracruz333@', suc:'Veracruz',             rol:'staff', key:'logia_veracruz'},
+};
+let DB={},ses=null,waLog=[],notifLog=[],notifOpen=false,notifiedIds=new Set();
+
+// ── Estilistas por sucursal ─────────────────────────────────
+const ESTILISTAS_POR_SUC = {
+  'Condesa':           [{id:1,nombre:'Rodrigo \"Viking\" Salazar',especialidad:'Corte clásico & degradados',tel:'',exp:'7 años'},{id:2,nombre:'Emilio Vargas',especialidad:'Barba y diseño facial',tel:'',exp:'5 años'},{id:3,nombre:'Axel Moreno',especialidad:'Fade & texturas',tel:'',exp:'4 años'},{id:4,nombre:'Sebastián Cruz',especialidad:'Cortes urbanos',tel:'',exp:'3 años'},{id:5,nombre:'Bruno Delgado',especialidad:'Arte en piel',tel:'',exp:'6 años'},{id:6,nombre:'Mateo Ríos',especialidad:'Barba completa & facial',tel:'',exp:'4 años'}],
+  'Roma Norte':        [{id:1,nombre:'Tomás \"El Bárbaro\" Leal',especialidad:'Corte clásico & navaja',tel:'',exp:'9 años'},{id:2,nombre:'Iker Fuentes',especialidad:'Degradados y fade',tel:'',exp:'5 años'},{id:3,nombre:'Dante Herrera',especialidad:'Barba & bigote',tel:'',exp:'6 años'},{id:4,nombre:'Nicolás Soto',especialidad:'Tatuajes y arte',tel:'',exp:'8 años'},{id:5,nombre:'Lucas Méndez',especialidad:'Cortes modernos',tel:'',exp:'3 años'},{id:6,nombre:'Santiago Vega',especialidad:'Faciales & grooming',tel:'',exp:'4 años'},{id:7,nombre:'Andrés Quiroz',especialidad:'Cortes clásicos',tel:'',exp:'2 años'}],
+  'Roma Sur':          [{id:1,nombre:'Gael \"Odin\" Bernal',especialidad:'Barba vikinga & trenzas',tel:'',exp:'6 años'},{id:2,nombre:'Fabián Torres',especialidad:'Degradados suaves',tel:'',exp:'4 años'},{id:3,nombre:'Renato Alvarado',especialidad:'Fade & diseño',tel:'',exp:'5 años'},{id:4,nombre:'Óscar Ramos',especialidad:'Arte en piel',tel:'',exp:'7 años'},{id:5,nombre:'Pablo Castillo',especialidad:'Cortes clásicos',tel:'',exp:'3 años'}],
+  'Polanco':           [{id:1,nombre:'Maximiliano \"Max\" Doria',especialidad:'Estilismo & grooming premium',tel:'',exp:'10 años'},{id:2,nombre:'Adrián Peña',especialidad:'Degradados & fade europeo',tel:'',exp:'7 años'},{id:3,nombre:'Cristóbal Mena',especialidad:'Barba completa',tel:'',exp:'5 años'},{id:4,nombre:'Rafael Lozano',especialidad:'Cortes contemporáneos',tel:'',exp:'6 años'},{id:5,nombre:'Gonzalo Ibarra',especialidad:'Arte en piel',tel:'',exp:'9 años'},{id:6,nombre:'Héctor Suárez',especialidad:'Faciales masculinos',tel:'',exp:'4 años'},{id:7,nombre:'Felipe Aranda',especialidad:'Cortes clásicos',tel:'',exp:'3 años'},{id:8,nombre:'Diego Montoya',especialidad:'Texturizados & rizos',tel:'',exp:'5 años'}],
+  'Reforma':           [{id:1,nombre:'Arturo \"Ragnar\" Fuentes',especialidad:'Corte con navaja & barba',tel:'',exp:'8 años'},{id:2,nombre:'Iván Guerrero',especialidad:'Degradados ejecutivos',tel:'',exp:'6 años'},{id:3,nombre:'Jorge Blanco',especialidad:'Fade & diseño',tel:'',exp:'5 años'},{id:4,nombre:'Mauricio Solís',especialidad:'Arte en piel',tel:'',exp:'7 años'},{id:5,nombre:'Eduardo Parra',especialidad:'Barba & facial',tel:'',exp:'4 años'},{id:6,nombre:'Fernando Reyes',especialidad:'Cortes modernos',tel:'',exp:'3 años'}],
+  'San Rafael':        [{id:1,nombre:'César \"Lobo\" Domínguez',especialidad:'Corte clásico & barba',tel:'',exp:'9 años'},{id:2,nombre:'Alexis Navarro',especialidad:'Fade & texturas',tel:'',exp:'4 años'},{id:3,nombre:'Marco Espinoza',especialidad:'Barba completa',tel:'',exp:'6 años'},{id:4,nombre:'Julián Ávila',especialidad:'Arte en piel',tel:'',exp:'8 años'},{id:5,nombre:'Rodrigo Muñoz',especialidad:'Cortes urbanos',tel:'',exp:'3 años'},{id:6,nombre:'Samuel Flores',especialidad:'Grooming & facial',tel:'',exp:'5 años'}],
+  'Circuito Interior': [{id:1,nombre:'Omar \"Berserker\" Vidal',especialidad:'Barba & corte vikingo',tel:'',exp:'7 años'},{id:2,nombre:'Ramón Díaz',especialidad:'Degradados & fade',tel:'',exp:'5 años'},{id:3,nombre:'Víctor Cárdenas',especialidad:'Arte en piel',tel:'',exp:'8 años'},{id:4,nombre:'Hugo Medina',especialidad:'Cortes clásicos',tel:'',exp:'4 años'},{id:5,nombre:'Enrique Salinas',especialidad:'Barba completa & facial',tel:'',exp:'6 años'},{id:6,nombre:'Joel Aguilar',especialidad:'Fade & textura',tel:'',exp:'3 años'},{id:7,nombre:'Roberto Cabrera',especialidad:'Cortes modernos',tel:'',exp:'5 años'}],
+  'SLP Plaza Covalia': [{id:1,nombre:'Hernán \"Thor\" Varela',especialidad:'Corte & barba estilo europeo',tel:'',exp:'6 años'},{id:2,nombre:'Camilo Ortega',especialidad:'Degradados & fade',tel:'',exp:'4 años'},{id:3,nombre:'Alejandro Serna',especialidad:'Arte en piel',tel:'',exp:'7 años'},{id:4,nombre:'Ricardo Luna',especialidad:'Barba vikinga',tel:'',exp:'5 años'},{id:5,nombre:'Armando Ruiz',especialidad:'Cortes clásicos',tel:'',exp:'3 años'},{id:6,nombre:'Ignacio Pedraza',especialidad:'Faciales & grooming',tel:'',exp:'4 años'}],
+  'Veracruz':          [{id:1,nombre:'Joel \"Mjolnir\" Méndez',especialidad:'Barba & corte tropical',tel:'',exp:'5 años'},{id:2,nombre:'Sergio Guzmán',especialidad:'Fade & degradados',tel:'',exp:'4 años'},{id:3,nombre:'Alberto Paredes',especialidad:'Arte en piel',tel:'',exp:'6 años'},{id:4,nombre:'Ernesto Trejo',especialidad:'Corte clásico',tel:'',exp:'3 años'},{id:5,nombre:'Manuel Córdoba',especialidad:'Barba completa',tel:'',exp:'5 años'}],
+  'Administración':    [{id:1,nombre:'Demo Barber',especialidad:'General',tel:'',exp:'5 años'}],
+};
+
+// ── Servicios La Logia (iguales para todas las sucursales) ──
+const SERVICIOS_LL = [
+  {id:1, nombre:'Corte clásico',          precio:220, duracion:30},
+  {id:2, nombre:'Corte + Barba',          precio:330, duracion:50},
+  {id:3, nombre:'Barba completa',         precio:180, duracion:30},
+  {id:4, nombre:'Diseño y perfilado',     precio:150, duracion:20},
+  {id:5, nombre:'Facial vikingo',         precio:280, duracion:40},
+  {id:6, nombre:'Corte infantil',         precio:170, duracion:25},
+  {id:7, nombre:'Fade & degradado',       precio:250, duracion:35},
+  {id:8, nombre:'Arte en piel (tatuaje)', precio:800, duracion:120},
+];
+
+// ── Inventario La Logia (iguales para todas las sucursales) ──
+const INVENTARIO_LL = [
+  {id:1,  nombre:'Pomada mate La Logia 90g',       sku:'LL-P01', categoria:'Estilizadores',   pv:220, pc:95,  stock:18, min:5},
+  {id:2,  nombre:'Cera fuerte La Logia 100g',      sku:'LL-P02', categoria:'Estilizadores',   pv:200, pc:85,  stock:22, min:5},
+  {id:3,  nombre:'Aceite de barba La Logia 30ml',  sku:'LL-P03', categoria:'Cuidado de barba',pv:280, pc:120, stock:14, min:4},
+  {id:4,  nombre:'Bálsamo de barba La Logia 60ml', sku:'LL-P04', categoria:'Cuidado de barba',pv:260, pc:110, stock:10, min:4},
+  {id:5,  nombre:'Shampoo para barba La Logia',    sku:'LL-P05', categoria:'Cuidado de barba',pv:240, pc:100, stock:8,  min:3},
+  {id:6,  nombre:'Camiseta La Logia — Negra',      sku:'LL-M01', categoria:'Merch',            pv:480, pc:200, stock:5,  min:3},
+  {id:7,  nombre:'Camiseta La Logia — Gris',       sku:'LL-M02', categoria:'Merch',            pv:480, pc:200, stock:4,  min:3},
+  {id:8,  nombre:'Gorra La Logia — Logo bordado',  sku:'LL-M03', categoria:'Merch',            pv:420, pc:180, stock:2,  min:3},
+  {id:9,  nombre:'Sudadera La Logia Hoodie',       sku:'LL-M04', categoria:'Merch',            pv:780, pc:350, stock:3,  min:2},
+  {id:10, nombre:'Navaja de afeitar La Logia',     sku:'LL-H01', categoria:'Herramientas',     pv:550, pc:250, stock:6,  min:2},
+  {id:11, nombre:'Peine metálico La Logia',        sku:'LL-H02', categoria:'Herramientas',     pv:180, pc:70,  stock:9,  min:3},
+  {id:12, nombre:'Toalla La Logia',                sku:'LL-H03', categoria:'Herramientas',     pv:150, pc:60,  stock:0,  min:5},
+];
+
+function initDB(suc){
+  if(DB[suc])return;
+  const hoy=today();
+  const ests = (ESTILISTAS_POR_SUC[suc]||ESTILISTAS_POR_SUC['Administración']).map(e=>({...e}));
+  const srvs = SERVICIOS_LL.map(s=>({...s}));
+  const inv  = INVENTARIO_LL.map(i=>({...i}));
+
+  // Citas de muestra realistas para el día de hoy
+  const citas=[];
+  const nombres=['Diego Ramírez','Javier Ortiz','Miguel Ángel Torres','Carlos Mendoza','Andrés Villanueva','Roberto Castillo','Luis Fernando Gómez','Pablo Jiménez','Eduardo Morales','Emilio Sandoval','Sergio Núñez','Hernán Delgado'];
+  const horas=['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
+  const estados=['confirmada','confirmada','pendiente','confirmada','pendiente','completada'];
+  let citaId=1;
+  ests.slice(0,Math.min(ests.length,5)).forEach((est,ei)=>{
+    const n=Math.floor(Math.random()*2)+2; // 2-3 citas por estilista
+    for(let i=0;i<n;i++){
+      const srv=srvs[Math.floor(Math.random()*(srvs.length-1))]; // excluir tatuaje del demo
+      citas.push({
+        id:citaId++,
+        cliente:nombres[(ei*3+i)%nombres.length],
+        tel:'+521551000'+String(citaId).padStart(4,'0'),
+        servicio:srv.id,
+        estilista:est.id,
+        fecha:hoy,
+        hora:horas[(ei*3+i)%horas.length],
+        estado:estados[(ei*3+i)%estados.length],
+        notas:'',
+        origen:'sistema'
+      });
+    }
+  });
+
+  // Pagos de muestra del día
+  const pagos=[];
+  citas.filter(c=>c.estado==='completada').forEach((c,pi)=>{
+    const srv=srvs.find(s=>s.id===c.servicio);
+    pagos.push({id:pi+1,cliente:c.cliente,monto:srv?.precio||200,concepto:'Servicio',metodo:pi%2===0?'Efectivo':'Tarjeta',fecha:hoy,hora:c.hora});
+  });
+
+  DB[suc]={
+    estilistas: ests,
+    servicios:  srvs,
+    citas,
+    pagos,
+    inventario: inv,
+    movimientos:[],
+    config:{
+      wa:'',
+      minutos:60,
+      msgConf:'Hola {nombre} 👋\n\nTu cita en *La Logia {sucursal}* está confirmada ✅\n\n📅 {fecha} ⏰ {hora}\n✂️ {servicio} · 💈 {estilista}\n\n¡Bienvenido a la manada!',
+      msgRec:'Hola {nombre} 👋\n\n⏰ Recuerda tu cita en *La Logia {sucursal}* en ~1 hora:\n\n📅 {fecha} ⏰ {hora}\n✂️ {servicio} · 💈 {estilista}\n\n¡Te esperamos!'
+    }
+  };
+}
+const D=()=>DB[ses.sucursal];
+const saveDB=()=>{try{localStorage.setItem('la-logia-db',JSON.stringify(DB));}catch(e){}};
+const loadDB=()=>{try{const d=localStorage.getItem('la-logia-db');if(d)DB=JSON.parse(d);}catch(e){}};
+
+/* ══════════════════════
+   NAVEGACIÓN ENTRE PANTALLAS
+══════════════════════ */
+function showScreen(id){
+  const current=document.querySelector('.screen.active');
+  const target=document.getElementById(id);
+  if(!target||target===current) return;
+
+  const enterClass = (id==='loginScreen'||id==='bookingPage') ? 'screen-enter-scale' : 'screen-enter';
+
+  if(current){
+    // Animar salida de la pantalla actual
+    current.classList.add('screen-exit');
+    setTimeout(()=>{
+      // Ocultar todas
+      document.querySelectorAll('.screen').forEach(s=>{
+        s.classList.remove('active','screen-exit','screen-enter','screen-enter-scale');
+        s.style.display='none';
+      });
+      // Mostrar nueva pantalla con animación
+      target.style.display=(id==='bookingPage')?'flex':'block';
+      target.classList.add('active',enterClass);
+      window.scrollTo({top:0,behavior:'instant'});
+      setTimeout(()=>target.classList.remove(enterClass),400);
+    },200);
+  } else {
+    document.querySelectorAll('.screen').forEach(s=>{
+      s.classList.remove('active');
+      s.style.display='none';
+    });
+    target.style.display=(id==='bookingPage')?'flex':'block';
+    target.classList.add('active',enterClass);
+    window.scrollTo(0,0);
+    setTimeout(()=>target.classList.remove(enterClass),400);
+  }
+}
+function irDemo(){showScreen('demoPage');}
+function irSistema(){showScreen('loginScreen');}
+function irBookingDemo(){mostrarBooking('logia_centro');}
+function contactar(){const m=encodeURIComponent('Hola 👋 Me interesa conocer más sobre el sistema La Logia para mi negocio. ¿Podemos agendar una demo?');window.open('https://wa.me/?text='+m,'_blank');}
+
+/* ══════════════════════
+   BROADCAST + POLLING
+══════════════════════ */
+let bCh=null;
+function initChannel(){
+  try{bCh=new BroadcastChannel('la-logia');bCh.onmessage=e=>{const d=e.data;if(d.type==='nueva-cita'&&ses&&d.sucursal===ses.sucursal){if(!D().citas.find(c=>c.id===d.cita.id)){D().citas.push(d.cita);saveDB();renderCitas();updateCitasStats();}mostrarPopNueva(d.cita);}};}catch(e){}
+}
+let lastPoll=Date.now();
+function pollPending(){
+  try{const raw=localStorage.getItem('la-logia-pending');if(!raw||!ses)return;const p=JSON.parse(raw);const nn=p.filter(b=>b.ts>lastPoll&&b.sucursal===ses.sucursal);nn.forEach(b=>{if(!D().citas.find(c=>c.id===b.cita.id)){D().citas.push(b.cita);saveDB();renderCitas();updateCitasStats();mostrarPopNueva(b.cita);}});if(nn.length)lastPoll=Date.now();}catch(e){}
+}
+
+/* ══════════════════════
+   AUTH
+══════════════════════ */
+function fill(u,p){document.getElementById('lU').value=u;document.getElementById('lP').value=p;}
+function doLogin(){
+  const u=V('lU').trim(),p=V('lP');
+  if(USERS[u]&&USERS[u].pass===p){
+    loadDB();ses={user:u,sucursal:USERS[u].suc,rol:USERS[u].rol,key:USERS[u].key};initDB(ses.sucursal);
+    document.getElementById('lErr').style.display='none';
+    // Breve feedback visual antes de transición
+    const btn=document.querySelector('.lbtn');
+    if(btn){btn.textContent='Entrando...';btn.style.opacity='.7';}
+    setTimeout(()=>{
+      if(btn){btn.textContent='INGRESAR';btn.style.opacity='1';}
+      showScreen('appScreen');
+    document.getElementById('hdrSuc').textContent=ses.sucursal;
+    document.getElementById('hdrSub').textContent=ses.rol==='admin'?'ADMINISTRACIÓN':ses.sucursal.toUpperCase();
+      initChannel();setInterval(pollPending,8000);setInterval(checkReminders,30000);
+      cargarConfig();renderAll();
+    },120);
+  } else {document.getElementById('lErr').style.display='block';}
+}
+function doLogout(){
+  ses=null;notifiedIds=new Set();notifLog=[];
+  try{if(bCh){bCh.close();bCh=null;}}catch(e){}
+  // Limpiar sesión del demo gate → obliga a re-autenticarse
+  sessionStorage.removeItem('logia_demo_ok');
+  document.getElementById('lU').value='';document.getElementById('lP').value='';
+  document.getElementById('gateUser').value='';
+  document.getElementById('gateInput').value='';
+  document.getElementById('demoGate').style.display='flex';
+  showScreen('demoPage');
+  openTab('citas',document.querySelector('.tbb'));
+}
+
+/* ══════════════════════
+   TABS
+══════════════════════ */
+function openTab(n,b){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tbb').forEach(x=>x.classList.remove('active'));
+  document.getElementById(n).classList.add('active');b.classList.add('active');
+  if(n==='citas'){actualizarCalBadge();}
+  if(n==='cobranza'){renderCobranza();setTimeout(actualizarItemsDisp,50);}
+  if(n==='inventario')renderInventario();
+  if(n==='reportes'){
+    const isAdmin = ses.rol==='admin';
+    document.getElementById('corpDash').style.display = isAdmin ? 'block' : 'none';
+    if(isAdmin) genCorpDashboard();
+    initRepSel();setPer();genReportes();
+  }
+  if(n==='config')cargarConfig();
+}
+function renderAll(){renderCitas();renderEstilistas();renderServicios();renderInventario();renderCobranza();refreshSel();updateCitasStats();renderCal();}
+
+/* ══════════════════════
+   CITAS
+══════════════════════ */
+function addCita(){
+  const nombre=V('cNombre'),tel=V('cTel'),servicio=parseInt(V('cSrv')),estilista=parseInt(V('cEst')),fecha=V('cFecha'),hora=V('cHora'),notas=V('cNotas');
+  if(!nombre||!servicio||!estilista||!fecha||!hora){alert('Completa los campos obligatorios');return;}
+
+  // ── Validar duplicados ──
+  const citasActivas=D().citas.filter(c=>c.estado!=='cancelada'&&c.fecha===fecha&&c.hora===hora);
+  const mismoEstilista=citasActivas.find(c=>c.estilista===estilista);
+  const mismaHora=citasActivas.find(c=>c.cliente===nombre);
+  const srv=D().servicios.find(s=>s.id===servicio);
+  const est=D().estilistas.find(e=>e.id===estilista);
+
+  if(mismoEstilista){
+    const cli=mismoEstilista.cliente;
+    const srvConflicto=D().servicios.find(s=>s.id===mismoEstilista.servicio);
+    const ok=confirm(
+      '🚨 CONFLICTO DE ESTILISTA\n\n'+
+      '👤 '+est?.nombre+' ya tiene una cita agendada:\n\n'+
+      '   📅 Fecha: '+fecha+'\n'+
+      '   ⏰ Hora: '+hora+'\n'+
+      '   👤 Cliente: '+cli+'\n'+
+      '   🪒 Servicio: '+(srvConflicto?.nombre||'—')+'\n\n'+
+      '❌ Se recomienda cambiar de estilista u horario.\n'+
+      '¿Deseas agendar de todas formas?'
+    );
+    if(!ok) return;
+  }
+
+  if(!mismoEstilista && citasActivas.length>0){
+    const ok=confirm(
+      '⚠️ HORARIO OCUPADO\n\n'+
+      'Ya hay '+citasActivas.length+' cita(s) agendada(s) el '+fecha+' a las '+hora+'.\n\n'+
+      '¿Deseas agendar de todas formas?'
+    );
+    if(!ok) return;
+  }
+
+  const cita={id:Date.now(),cliente:nombre,tel,servicio,estilista,fecha,hora,estado:'pendiente',notas,origen:'sistema'};
+  D().citas.push(cita);saveDB();
+  ['cNombre','cTel','cNotas'].forEach(C);renderCitas();refreshSel();updateCitasStats();mostrarPopAgendada(cita);
+}
+function cambiarEstado(id,estado){const c=D().citas.find(x=>x.id===id);if(c){c.estado=estado;saveDB();renderCitas();updateCitasStats();}}
+function delCita(id){D().citas=D().citas.filter(c=>c.id!==id);saveDB();renderCitas();updateCitasStats();actualizarCalBadge();if(calPopupAbierto)renderCalPopup();}
+function renderCitas(){
+  const fe=V('filtFecha'),es=V('filtEst');
+  let citas=[...D().citas].filter(c=>(!fe||c.fecha===fe)&&(!es||c.estado===es)).sort((a,b)=>a.fecha.localeCompare(b.fecha)||a.hora.localeCompare(b.hora));
+  const el=document.getElementById('listaCitas');
+  if(!citas.length){el.innerHTML='<p style="color:#1e1e1e;padding:1rem;text-align:center;">Sin citas</p>';return;}
+  el.innerHTML=citas.map(c=>{
+    const srv=D().servicios.find(s=>s.id===c.servicio),est=D().estilistas.find(e=>e.id===c.estilista);
+    const bMap={'nueva':'badge badge-nueva','pendiente':'badge badge-pend','confirmada':'badge badge-conf','completada':'badge badge-comp','cancelada':'badge'};
+    const ob=c.origen==='portal'?'<span class="badge" style="background:#1e1208;border-color:#3a2208;color:#aa7733;margin-left:.3rem;">📱 Portal</span>':'';
+    return `<div class="cita-card ${c.estado}">
+      <div class="cita-top"><strong>${c.cliente}${ob}</strong><span class="${bMap[c.estado]||'badge'}">${c.estado}</span></div>
+      <div class="cita-info"><p>📅 ${c.fecha} ⏰ ${c.hora} | 🪒 ${srv?.nombre||'—'} | 👤 ${est?.nombre||'—'}</p><p>📞 ${c.tel||'—'}${c.notas?' 📝 '+c.notas:''}</p></div>
+      <div class="cita-actions">
+        ${c.estado==='nueva'||c.estado==='pendiente'?`<button class="btn btn-sm btn-confirm" onclick="cambiarEstado(${c.id},'confirmada')">✓ Confirmar</button>`:''}
+        ${c.estado==='confirmada'?`<button class="btn btn-sm" onclick="cambiarEstado(${c.id},'completada')">✅ Completada</button>`:''}
+        <button class="btn btn-sm btn-wa" onclick="enviarWA(${c.id},'confirmacion')">📱 Confirmar WA</button>
+        <button class="btn btn-sm btn-wa" onclick="enviarWA(${c.id},'recordatorio')">🔔 Recordar WA</button>
+        ${c.estado!=='cancelada'?`<button class="btn btn-sm btn-danger" onclick="cambiarEstado(${c.id},'cancelada')">✕</button>`:''}
+        <button class="btn btn-sm btn-danger" onclick="delCita(${c.id})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updateCitasStats(){
+  const cs=D().citas,hoy=today();
+  document.getElementById('citasStats').innerHTML=`
+    <div class="sc"><div class="slbl">📋 Total</div><div class="sval">${cs.length}</div></div>
+    <div class="sc"><div class="slbl">📅 Hoy</div><div class="sval">${cs.filter(c=>c.fecha===hoy).length}</div></div>
+    <div class="sc"><div class="slbl">🟠 Portal</div><div class="sval">${cs.filter(c=>c.estado==='nueva').length}</div></div>
+    <div class="sc"><div class="slbl">⏳ Pendientes</div><div class="sval">${cs.filter(c=>c.estado==='pendiente').length}</div></div>
+    <div class="sc"><div class="slbl">✓ Confirmadas</div><div class="sval">${cs.filter(c=>c.estado==='confirmada').length}</div></div>`;
+}
+
+/* ══════════════════════
+   WHATSAPP
+══════════════════════ */
+function buildMsg(tmpl,cita){
+  const s=D().servicios.find(x=>x.id===cita.servicio),e=D().estilistas.find(x=>x.id===cita.estilista);
+  return tmpl.replace(/{nombre}/g,cita.cliente).replace(/{servicio}/g,s?.nombre||'—').replace(/{estilista}/g,e?.nombre||'—').replace(/{fecha}/g,cita.fecha).replace(/{hora}/g,cita.hora).replace(/{sucursal}/g,ses.sucursal);
+}
+function waLink(tel,msg){
+  const num=(tel||'').replace(/\D/g,'');
+  if(!num) return 'https://wa.me/?text='+encodeURIComponent(msg);
+  return 'https://wa.me/'+num+'?text='+encodeURIComponent(msg);
+}
+function enviarWA(id,tipo){
+  const c=D().citas.find(x=>x.id===id);
+  if(!c){alert('Cita no encontrada');return;}
+  const msg=tipo==='confirmacion'?buildMsg(D().config.msgConf,c):buildMsg(D().config.msgRec,c);
+  // Si no hay teléfono del cliente, abrir WhatsApp sin número (el usuario elige)
+  const tel=(c.tel||'').replace(/\D/g,'');
+  const url=tel?'https://wa.me/'+tel+'?text='+encodeURIComponent(msg):'https://wa.me/?text='+encodeURIComponent(msg);
+  waLog.push({fecha:today(),hora:nowTime(),cliente:c.cliente,tel:c.tel||'—',tipo:tipo==='confirmacion'?'Confirmación':'Recordatorio'});
+  window.open(url,'_blank');
+}
+
+/* ══════════════════════
+   POPUPS
+══════════════════════ */
+function detHTML(c){
+  const s=D().servicios.find(x=>x.id===c.servicio),e=D().estilistas.find(x=>x.id===c.estilista);
+  return`<div><span>👤 Cliente</span><span>${c.cliente}</span></div><div><span>📅 Fecha</span><span>${c.fecha}</span></div><div><span>⏰ Hora</span><span>${c.hora}</span></div><div><span>🪒 Servicio</span><span>${s?.nombre||'—'} · $${fmt(s?.precio||0)}</span></div><div><span>👤 Estilista</span><span>${e?.nombre||'—'}</span></div><div><span>📞 Tel</span><span>${c.tel||'—'}</span></div>${c.notas?`<div><span>📝 Notas</span><span>${c.notas}</span></div>`:''}`;
+}
+function mostrarPopNueva(cita){
+  document.getElementById('popNuevaDet').innerHTML=detHTML(cita);
+  document.getElementById('popNuevaConf').onclick=()=>{cambiarEstado(cita.id,'confirmada');enviarWA(cita.id,'confirmacion');cerrarPop('popNueva');};
+  document.getElementById('popNuevaWA').onclick=()=>{enviarWA(cita.id,'confirmacion');cerrarPop('popNueva');};
+  document.getElementById('popNueva').classList.add('show');
+  agregarNotif(`🟠 Nueva (portal): ${cita.cliente}`,`${cita.fecha} ${cita.hora}`);
+}
+function mostrarPopAgendada(cita){
+  document.getElementById('popAgendadaDet').innerHTML=detHTML(cita);
+  document.getElementById('popAgendadaWA').onclick=()=>{enviarWA(cita.id,'confirmacion');cerrarPop('popAgendada');};
+  document.getElementById('popAgendada').classList.add('show');
+  agregarNotif(`📅 Agendada: ${cita.cliente}`,`${cita.fecha} ${cita.hora}`);
+}
+function mostrarPopRec(cita){
+  document.getElementById('popRecDet').innerHTML=detHTML(cita);
+  document.getElementById('popRecWA').onclick=()=>{enviarWA(cita.id,'recordatorio');cerrarPop('popRec');};
+  document.getElementById('popRecConf').onclick=()=>{cambiarEstado(cita.id,'confirmada');cerrarPop('popRec');};
+  document.getElementById('popRec').classList.add('show');
+  agregarNotif(`⏰ Recordatorio: ${cita.cliente}`,`En ${D().config.minutos} min · ${cita.hora}`);
+}
+function cerrarPop(id){document.getElementById(id).classList.remove('show');}
+function checkReminders(){
+  if(!ses||!DB[ses.sucursal])return;
+  const now=new Date(),hoy=today(),cur=now.getHours()*60+now.getMinutes(),margen=parseInt(D().config.minutos)||60;
+  D().citas.forEach(c=>{
+    if(c.fecha!==hoy||['cancelada','completada'].includes(c.estado)||notifiedIds.has(c.id))return;
+    const[h,m]=c.hora.split(':').map(Number),diff=h*60+m-cur;
+    if(diff>=margen-5&&diff<=margen+5){notifiedIds.add(c.id);mostrarPopRec(c);}
+  });
+}
+
+/* ══════════════════════
+   NOTIFICACIONES
+══════════════════════ */
+function agregarNotif(titulo,sub){
+  notifLog.unshift({titulo,sub,hora:nowTime()});if(notifLog.length>30)notifLog.pop();
+  const b=document.getElementById('bellBadge');b.textContent=notifLog.length;b.classList.add('show');
+  renderNotifPanel();
+}
+function renderNotifPanel(){
+  document.getElementById('notifList').innerHTML=notifLog.length?notifLog.map(n=>`<div class="ni"><div class="ni-t">${n.titulo}</div><div class="ni-s">${n.sub} · ${n.hora}</div></div>`).join(''):'<div class="ne">Sin notificaciones</div>';
+}
+function toggleNotif(){notifOpen=!notifOpen;document.getElementById('notifPanel').classList.toggle('show',notifOpen);if(notifOpen)document.getElementById('bellBadge').classList.remove('show');}
+document.addEventListener('click',e=>{if(notifOpen&&!e.target.closest('.bell-wrap')&&!e.target.closest('.notif-panel')){notifOpen=false;document.getElementById('notifPanel').classList.remove('show');}});
+
+/* ══════════════════════
+   ESTILISTAS
+══════════════════════ */
+function addEstilista(){const n=V('eN'),e=V('eE'),t=V('eT'),x=V('eX');if(!n||!e){alert('Nombre y especialidad requeridos');return;}D().estilistas.push({id:Date.now(),nombre:n,especialidad:e,tel:t,exp:x});['eN','eE','eT','eX'].forEach(C);saveDB();renderEstilistas();refreshSel();}
+function delEst(id){D().estilistas=D().estilistas.filter(e=>e.id!==id);saveDB();renderEstilistas();refreshSel();}
+function renderEstilistas(){const el=document.getElementById('listaEst'),est=D().estilistas;el.innerHTML=!est.length?'<p style="color:#222">Sin estilistas</p>':est.map(e=>`<div class="icard"><h3>${e.nombre}<button class="btn btn-sm btn-danger" onclick="delEst(${e.id})">🗑</button></h3><p>🎨 ${e.especialidad}</p><p>📞 ${e.tel}</p><p>⏳ ${e.exp}</p></div>`).join('');}
+
+/* ══════════════════════
+   SERVICIOS
+══════════════════════ */
+function addServicio(){const n=V('sN'),p=parseFloat(V('sP')),d=parseInt(V('sD'));if(!n||!p||!d){alert('Completa todos los campos');return;}D().servicios.push({id:Date.now(),nombre:n,precio:p,duracion:d});['sN','sP','sD'].forEach(C);saveDB();renderServicios();refreshSel();}
+function delSrv(id){D().servicios=D().servicios.filter(s=>s.id!==id);saveDB();renderServicios();refreshSel();}
+function renderServicios(){const el=document.getElementById('listaSrv'),srv=D().servicios;el.innerHTML=!srv.length?'<tr><td colspan="4" style="color:#222">Sin servicios</td></tr>':srv.map(s=>`<tr><td><strong style="color:#fff">${s.nombre}</strong></td><td>$${s.precio.toFixed(2)}</td><td>⏱ ${s.duracion} min</td><td><button class="btn btn-sm btn-danger" onclick="delSrv(${s.id})">🗑</button></td></tr>`).join('');}
+
+/* ══════════════════════
+   INVENTARIO
+══════════════════════ */
+function addProducto(){const n=V('iN'),cat=V('iCat'),sku=V('iSku'),pv=parseFloat(V('iPv'))||0,pc=parseFloat(V('iPc'))||0,stock=parseInt(V('iSt'))||0,min=parseInt(V('iMn'))||5;if(!n||!pv){alert('Nombre y precio obligatorios');return;}D().inventario.push({id:Date.now(),nombre:n,sku,categoria:cat,pv,pc,stock,min});['iN','iSku','iPv','iPc','iSt','iMn'].forEach(C);saveDB();renderInventario();}
+function delProd(id){D().inventario=D().inventario.filter(p=>p.id!==id);saveDB();renderInventario();}
+function ajustarStock(){const pid=parseInt(V('iAjP')),tipo=V('iAjT'),qty=parseInt(V('iAjQ'));if(!pid||!qty||qty<1){alert('Selecciona producto y cantidad');return;}const p=D().inventario.find(x=>x.id===pid);if(!p)return;if(tipo==='entrada')p.stock+=qty;else{if(p.stock<qty){alert('Stock insuficiente');return;}p.stock-=qty;}D().movimientos.push({fecha:today(),producto:p.nombre,tipo,cantidad:qty});saveDB();C('iAjQ');renderInventario();}
+function renderInventario(){
+  const inv=D().inventario,val=inv.reduce((a,p)=>a+p.pv*p.stock,0),bajos=inv.filter(p=>p.stock>0&&p.stock<=p.min).length,ceros=inv.filter(p=>p.stock===0).length;
+  document.getElementById('invStats').innerHTML=`<div class="sc"><div class="slbl">📦 Productos</div><div class="sval">${inv.length}</div></div><div class="sc"><div class="slbl">💰 Valor</div><div class="sval">$${fmt(val)}</div></div><div class="sc"><div class="slbl">⚠️ Stock Bajo</div><div class="sval">${bajos}</div></div><div class="sc"><div class="slbl">🚫 Agotados</div><div class="sval">${ceros}</div></div>`;
+  document.getElementById('iAjP').innerHTML='<option value="">— Producto —</option>'+inv.map(p=>`<option value="${p.id}">${p.nombre} (${p.stock})</option>`).join('');
+  const bj=inv.filter(p=>p.stock<=p.min);
+  document.getElementById('invBajo').innerHTML=bj.length?bj.map(p=>`<div style="background:#080808;border:1px solid #141414;border-radius:.38rem;padding:.6rem .7rem;margin-bottom:.38rem;display:flex;justify-content:space-between;align-items:center;"><div><strong style="color:#fff;font-size:.8rem">${p.nombre}</strong><p style="font-size:.68rem;color:#333">${p.sku} · ${p.categoria}</p></div><span style="color:${p.stock===0?'#773333':'#777733'};font-weight:700">${p.stock===0?'🚫 Agotado':'⚠️ '+p.stock}</span></div>`).join(''):'<p style="color:#222;padding:.5rem">✓ Stock OK</p>';
+  document.getElementById('listaInv').innerHTML=!inv.length?'<tr><td colspan="8" style="color:#222">Sin productos</td></tr>':inv.map(p=>{const mar=p.pc?((p.pv-p.pc)/p.pv*100).toFixed(1)+'%':'—';const sc=p.stock===0?'badge badge-zero':p.stock<=p.min?'badge badge-low':'badge badge-ok';return`<tr><td><strong style="color:#fff">${p.nombre}</strong></td><td><span class="badge">${p.sku||'—'}</span></td><td>${p.categoria}</td><td>$${p.pv.toFixed(2)}</td><td style="color:#333">$${p.pc.toFixed(2)}</td><td>${mar}</td><td><span class="${sc}">${p.stock===0?'🚫':p.stock<=p.min?'⚠️ '+p.stock:'✓ '+p.stock}</span></td><td><button class="btn btn-sm btn-danger" onclick="delProd(${p.id})">🗑</button></td></tr>`;}).join('');
+}
+
+/* ══════════════════════
+   COBRANZA
+══════════════════════ */
+function addPago(){
+  const cl = V('pCl');
+  const me = V('pMe');
+  const fe = V('pFe');
+  const ho = V('pHo');
+
+  // Validaciones claras
+  if(!cl){
+    alert('⚠️ Selecciona o escribe el nombre del cliente');
+    document.getElementById('pCl')?.focus();
+    return;
+  }
+  if(!ticketItems.length){
+    alert('⚠️ Agrega al menos un servicio o producto a la cuenta');
+    return;
+  }
+  if(!fe||!ho){
+    alert('⚠️ Completa la fecha y hora');
+    return;
+  }
+
+  // Calcular total del ticket
+  const total = ticketItems.reduce((a,i)=>a+i.precio, 0);
+
+  // Determinar concepto según los items
+  const tipos = [...new Set(ticketItems.map(i=>i.tipo))];
+  let concepto = 'Mixto';
+  if(tipos.length===1){
+    if(tipos[0]==='servicio') concepto='Servicio';
+    else if(tipos[0]==='merch') concepto='Merch';
+    else concepto='Manual';
+  }
+
+  // Detalle de items para el historial
+  const detalle = ticketItems.map(i=>i.nombre).join(', ');
+
+  // Guardar pago
+  D().pagos.push({
+    id: Date.now(),
+    cliente: cl,
+    concepto,
+    detalle,
+    monto: total,
+    metodo: me,
+    fecha: fe,
+    hora: ho,
+    items: [...ticketItems]
+  });
+
+  // Limpiar
+  C('pCl');
+  limpiarTicket();
+  saveDB();
+  renderCobranza();
+
+  // Feedback visual
+  const btn = document.querySelector('[onclick="addPago()"]');
+  if(btn){
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ Pago registrado — $'+fmt(total);
+    btn.style.background = '#1a4a1a';
+    setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 2000);
+  }
+}
+function delPago(id){D().pagos=D().pagos.filter(p=>p.id!==id);saveDB();renderCobranza();}
+function renderCobranza(){
+  const pg=D().pagos,hoy=today(),mes=hoy.slice(0,7);
+  const tot=S(pg,'monto'),hoyT=S(pg.filter(p=>p.fecha===hoy),'monto'),mesT=S(pg.filter(p=>p.fecha.startsWith(mes)),'monto');
+  const pend=D().citas.filter(c=>!pg.some(p=>p.cliente===c.cliente));
+  document.getElementById('cobT').textContent='$'+fmt(tot);document.getElementById('cobTS').textContent=pg.length+' pagos';
+  document.getElementById('cobH').textContent='$'+fmt(hoyT);document.getElementById('cobM').textContent='$'+fmt(mesT);
+  document.getElementById('cobC').textContent=D().citas.length;document.getElementById('cobP').textContent=pend.length;
+  const met={};pg.forEach(p=>{met[p.metodo]=(met[p.metodo]||0)+p.monto;});
+  document.getElementById('cobMet').innerHTML=Object.keys(met).length?Object.entries(met).map(([m,v])=>`<div style="display:flex;justify-content:space-between;padding:.55rem .65rem;background:#080808;border:1px solid #141414;border-radius:.38rem;margin-bottom:.38rem;"><span style="color:#fff">${m}</span><strong style="color:#aaa">$${fmt(v)}</strong></div>`).join(''):'<p style="color:#222">Sin pagos</p>';
+  document.getElementById('cobPDiv').innerHTML=pend.length?pend.map(c=>{const s=D().servicios.find(x=>x.id===c.servicio);return`<div style="background:#080808;border:1px solid #141414;border-radius:.38rem;padding:.55rem .65rem;margin-bottom:.38rem;"><strong style="color:#fff">${c.cliente}</strong><p style="font-size:.72rem;color:#333">${s?.nombre||'—'} · ${c.fecha} ${c.hora}</p><strong style="color:#666">$${fmt(s?.precio||0)}</strong></div>`;}).join(''):'<p style="color:#222;padding:.5rem">✓ Todas pagadas</p>';
+  document.getElementById('listaPagos').innerHTML=!pg.length?'<tr><td colspan="7" style="color:#222">Sin pagos</td></tr>':pg.map(p=>`<tr><td><strong style="color:#fff">${p.cliente}</strong></td><td><strong>$${fmt(p.monto)}</strong></td><td><span class="badge">${p.concepto}</span></td><td>${p.metodo}</td><td>${p.fecha} ${p.hora}</td><td><span class="badge badge-ok">Pagado</span></td><td><button class="btn btn-sm btn-danger" onclick="delPago(${p.id})">🗑</button></td></tr>`).join('');
+}
+
+/* ══════════════════════
+   CONFIG
+══════════════════════ */
+function cargarConfig(){
+  if(!ses)return;const cfg=D().config;
+  document.getElementById('cfgNombre').value=ses.sucursal;
+  document.getElementById('cfgWA').value=cfg.wa||'';
+  document.getElementById('cfgMin').value=cfg.minutos||60;
+  document.getElementById('cfgMsgConf').value=cfg.msgConf||'';
+  document.getElementById('cfgMsgRec').value=cfg.msgRec||'';
+
+  // Cargar URL base guardada
+  const savedURL=localStorage.getItem('la-logia-base-url')||'';
+  const cfgBase=document.getElementById('cfgBaseURL');
+  if(cfgBase) cfgBase.value=savedURL;
+
+  // Mostrar alerta si es archivo local
+  const isLocal=window.location.protocol==='file:';
+  const alert=document.getElementById('localFileAlert');
+  if(alert) alert.style.display=isLocal?'block':'none';
+
+  const link=bookingURL(ses.key);
+  document.getElementById('bookingLink').textContent=link;
+  document.getElementById('cfgWABtn').onclick=()=>generarWAMsg(link);
+
+  // Preview del link
+  const prev=document.getElementById('cfgURLPreview');
+  if(prev&&savedURL) prev.textContent='→ '+savedURL+'?book=1&suc='+ses.key;
+
+  document.getElementById('cfgUsers').innerHTML=Object.entries(USERS).map(([u,d])=>`<tr><td><strong style="color:#fff">${u}</strong></td><td>${d.suc}</td><td><span class="badge">${d.rol}</span></td></tr>`).join('');
+}
+function guardarConfig(){
+  if(!ses)return;
+  D().config.wa=V('cfgWA');
+  D().config.minutos=parseInt(V('cfgMin'))||60;
+  D().config.msgConf=document.getElementById('cfgMsgConf').value;
+  D().config.msgRec=document.getElementById('cfgMsgRec').value;
+  saveDB();
+}
+function guardarBaseURL(){
+  const url=V('cfgBaseURL').trim();
+  if(url) localStorage.setItem('la-logia-base-url',url);
+  else localStorage.removeItem('la-logia-base-url');
+  // Actualizar preview del link
+  const prev=document.getElementById('cfgURLPreview');
+  if(prev&&url) prev.textContent='→ '+url+'?book=1&suc='+ses.key;
+  // Actualizar link box
+  const lb=document.getElementById('bookingLink');
+  if(lb) lb.textContent=bookingURL(ses.key);
+}
+function bookingURL(key){
+  // Si está configurada una URL pública, usarla
+  const customURL=(localStorage.getItem('la-logia-base-url')||'').trim();
+  const base=customURL||window.location.href.split('#')[0].split('?')[0];
+  return base+'?book=1&suc='+encodeURIComponent(key);
+}
+function copiarLink(){const l=bookingURL(ses.key);navigator.clipboard.writeText(l).then(()=>alert('¡Link copiado!')).catch(()=>alert(l));}
+function generarWAMsg(link){
+  const b=document.getElementById('waMsgBox'),t=document.getElementById('waMsgText');
+  b.style.display='block';
+  const isLocal=link.startsWith('file://');
+  const linkTexto=isLocal
+    ?'⚠️ Configura la URL pública del sistema en la sección de Configuración para generar el link correcto.'
+    :'👉 '+link;
+  t.value=`¡Hola! 👋 Gracias por escribirnos a *La Logia – ${ses.sucursal}*.\n\nAgenda tu cita fácilmente en línea:\n\n${linkTexto}\n\nElige tu servicio, estilista y horario. ¡Te esperamos! ✂️`;
+}
+function copiarWAMsg(){navigator.clipboard.writeText(document.getElementById('waMsgText').value).then(()=>alert('¡Mensaje copiado!')).catch(()=>{});}
+function verPortal(){mostrarBooking(ses.key);}
+
+/* ══════════════════════
+   REPORTES
+══════════════════════ */
+function initRepSel(){document.getElementById('rSuc').textContent=ses.sucursal;document.getElementById('rEst').innerHTML='<option value="">Todos</option>'+D().estilistas.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join('');}
+function setPer(){const p=V('rPer'),hoy=today(),now=new Date();let ini='',fin=hoy;if(p==='hoy')ini=hoy;else if(p==='sem'){const d=new Date(now);d.setDate(now.getDate()-now.getDay());ini=d.toISOString().split('T')[0];}else if(p==='mes')ini=hoy.slice(0,7)+'-01';else if(p==='mes_ant'){const d=new Date(now.getFullYear(),now.getMonth()-1,1);ini=d.toISOString().split('T')[0];const d2=new Date(now.getFullYear(),now.getMonth(),0);fin=d2.toISOString().split('T')[0];}else if(p==='todo')ini='2000-01-01';if(ini)document.getElementById('rIni').value=ini;document.getElementById('rFin').value=fin;}
+function filtF(arr){const ini=V('rIni'),fin=V('rFin'),eId=parseInt(V('rEst'))||null;return arr.filter(x=>{const f=x.fecha||'';const ok=(!ini||f>=ini)&&(!fin||f<=fin);if(eId&&x.estilista!==undefined)return ok&&x.estilista===eId;return ok;});}
+function genReportes(){
+  const ini=V('rIni'),fin=V('rFin');document.getElementById('rTit').textContent=ini&&fin?`${ini} → ${fin}`:'Todo';
+  const citas=filtF(D().citas),pagos=filtF(D().pagos),inv=D().inventario,totI=S(pagos,'monto'),totC=citas.length,ticket=totC?totI/totC:0;
+  document.getElementById('rResKpi').innerHTML=`<div class="rkpi"><div class="val">$${fmt(totI)}</div><div class="lbl">Ingresos</div></div><div class="rkpi"><div class="val">${totC}</div><div class="lbl">Citas</div></div><div class="rkpi"><div class="val">${citas.filter(c=>c.origen==='portal').length}</div><div class="lbl">Desde Portal</div></div><div class="rkpi"><div class="val">${pagos.length}</div><div class="lbl">Pagos</div></div><div class="rkpi"><div class="val">$${fmt(ticket)}</div><div class="lbl">Ticket Prom.</div></div>`;
+  document.getElementById('rCitKpi').innerHTML=`<div class="rkpi"><div class="val">${totC}</div><div class="lbl">Total</div></div><div class="rkpi"><div class="val">${citas.filter(c=>c.estado==='confirmada').length}</div><div class="lbl">Conf.</div></div><div class="rkpi"><div class="val">${citas.filter(c=>c.estado==='completada').length}</div><div class="lbl">Comp.</div></div><div class="rkpi"><div class="val">${citas.filter(c=>c.origen==='portal').length}</div><div class="lbl">Portal</div></div>`;
+  document.getElementById('rCitBody').innerHTML=!citas.length?'<tr><td colspan="9" style="color:#222">Sin datos</td></tr>':citas.map(c=>{const s=D().servicios.find(x=>x.id===c.servicio),e=D().estilistas.find(x=>x.id===c.estilista);return`<tr><td>${c.fecha}</td><td>${c.hora}</td><td><strong style="color:#fff">${c.cliente}</strong></td><td>${c.tel}</td><td>${s?.nombre||'—'}</td><td>${e?.nombre||'—'}</td><td><span class="badge">${c.estado}</span></td><td><span class="badge">${c.origen||'sistema'}</span></td><td>$${fmt(s?.precio||0)}</td></tr>`;}).join('');
+  document.getElementById('rIngKpi').innerHTML=`<div class="rkpi"><div class="val">$${fmt(totI)}</div><div class="lbl">Total</div></div><div class="rkpi"><div class="val">$${fmt(S(pagos.filter(p=>p.concepto==='Servicio'),'monto'))}</div><div class="lbl">Servicios</div></div><div class="rkpi"><div class="val">$${fmt(S(pagos.filter(p=>p.concepto==='Merch'),'monto'))}</div><div class="lbl">Merch</div></div>`;
+  document.getElementById('rIngBody').innerHTML=!pagos.length?'<tr><td colspan="5" style="color:#222">Sin datos</td></tr>':pagos.map(p=>`<tr><td>${p.fecha}</td><td><strong style="color:#fff">${p.cliente}</strong></td><td><span class="badge">${p.concepto}</span></td><td>${p.metodo}</td><td><strong>$${fmt(p.monto)}</strong></td></tr>`).join('');
+  document.getElementById('rEstBody').innerHTML=D().estilistas.map(e=>{const ce=citas.filter(c=>c.estilista===e.id),ing=ce.reduce((a,c)=>{const s=D().servicios.find(x=>x.id===c.servicio);return a+(s?.precio||0);},0);return`<tr><td><strong style="color:#fff">${e.nombre}</strong></td><td>${e.especialidad}</td><td>${ce.length}</td><td>${ce.filter(c=>c.estado==='confirmada').length}</td><td>${ce.filter(c=>c.estado==='completada').length}</td><td><strong>$${fmt(ing)}</strong></td><td>$${fmt(ce.length?ing/ce.length:0)}</td></tr>`;}).join('');
+  const sst={};citas.forEach(c=>{if(!sst[c.servicio])sst[c.servicio]={cnt:0,ing:0};sst[c.servicio].cnt++;const s=D().servicios.find(x=>x.id===c.servicio);sst[c.servicio].ing+=(s?.precio||0);});const tIS=Object.values(sst).reduce((a,x)=>a+x.ing,0)||1;
+  document.getElementById('rSrvBody').innerHTML=D().servicios.map(s=>{const st=sst[s.id]||{cnt:0,ing:0};return`<tr><td><strong style="color:#fff">${s.nombre}</strong></td><td>$${fmt(s.precio)}</td><td>${st.cnt}</td><td>$${fmt(st.ing)}</td><td>${(st.ing/tIS*100).toFixed(1)}%</td></tr>`;}).join('');
+  const vI=inv.reduce((a,p)=>a+p.pv*p.stock,0),cI=inv.reduce((a,p)=>a+p.pc*p.stock,0);
+  document.getElementById('rInvKpi').innerHTML=`<div class="rkpi"><div class="val">${inv.length}</div><div class="lbl">Productos</div></div><div class="rkpi"><div class="val">$${fmt(vI)}</div><div class="lbl">Valor Venta</div></div><div class="rkpi"><div class="val">$${fmt(cI)}</div><div class="lbl">Valor Costo</div></div><div class="rkpi"><div class="val">$${fmt(vI-cI)}</div><div class="lbl">Margen</div></div>`;
+  document.getElementById('rInvBody').innerHTML=inv.map(p=>{const mar=p.pc?((p.pv-p.pc)/p.pv*100).toFixed(1)+'%':'—',est=p.stock===0?'Agotado':p.stock<=p.min?`Bajo (${p.stock})`:`OK (${p.stock})`;return`<tr><td><strong style="color:#fff">${p.nombre}</strong></td><td>${p.stock}</td><td><span class="badge ${p.stock===0?'badge-zero':p.stock<=p.min?'badge-low':'badge-ok'}">${est}</span></td><td>$${fmt(p.pv)}</td><td>$${fmt(p.pc)}</td><td>${mar}</td><td>$${fmt(p.pv*p.stock)}</td></tr>`;}).join('');
+  const met={};pagos.forEach(p=>{if(!met[p.metodo])met[p.metodo]={c:0,t:0};met[p.metodo].c++;met[p.metodo].t+=p.monto;});const tMet=Object.values(met).reduce((a,m)=>a+m.t,0)||1;
+  document.getElementById('rMetBody').innerHTML=!Object.keys(met).length?'<tr><td colspan="5" style="color:#222">Sin datos</td></tr>':Object.entries(met).sort((a,b)=>b[1].t-a[1].t).map(([m,d])=>`<tr><td><strong style="color:#fff">${m}</strong></td><td>${d.c}</td><td><strong>$${fmt(d.t)}</strong></td><td>${(d.t/tMet*100).toFixed(1)}%</td><td>$${fmt(d.t/d.c)}</td></tr>`).join('');
+  const pend=D().citas.filter(c=>!D().pagos.some(p=>p.cliente===c.cliente));
+  document.getElementById('rPenBody').innerHTML=!pend.length?'<tr><td colspan="5" style="color:#222">✓ Sin pendientes</td></tr>':filtF(pend).map(c=>{const s=D().servicios.find(x=>x.id===c.servicio),e=D().estilistas.find(x=>x.id===c.estilista);return`<tr><td>${c.fecha}</td><td><strong style="color:#fff">${c.cliente}</strong></td><td>${s?.nombre||'—'}</td><td>${e?.nombre||'—'}</td><td><strong style="color:#884444">$${fmt(s?.precio||0)}</strong></td></tr>`;}).join('');
+}
+function genCorpDashboard(){
+  // Agregar datos a todas las sucursales que no se han inicializado
+  Object.keys(USERS).forEach(u => {
+    const suc = USERS[u].suc;
+    if(suc !== 'Administración') initDB(suc);
+  });
+
+  const sucursales = Object.keys(DB).filter(s => s !== 'Administración');
+  if(!sucursales.length){ document.getElementById('corpKpis').innerHTML='<p style="color:#333;font-size:.8rem;">Sin datos de sucursales</p>'; return; }
+
+  // ── KPIs globales ──────────────────────────────────
+  let totalIng=0, totalCitas=0, totalEst=0, totalProd=0;
+  sucursales.forEach(s=>{
+    const d=DB[s];
+    totalIng  += d.pagos.reduce((a,p)=>a+p.monto,0);
+    totalCitas+= d.citas.length;
+    totalEst  += d.estilistas.length;
+    totalProd += d.inventario.reduce((a,i)=>a+i.stock,0);
+  });
+  document.getElementById('corpFecha').textContent = `Hoy · ${today()}`;
+  document.getElementById('corpKpis').innerHTML=`
+    <div class="rkpi"><div class="val">$${fmt(totalIng)}</div><div class="lbl">Ingresos Red</div></div>
+    <div class="rkpi"><div class="val">${totalCitas}</div><div class="lbl">Citas Total</div></div>
+    <div class="rkpi"><div class="val">${sucursales.length}</div><div class="lbl">Sucursales</div></div>
+    <div class="rkpi"><div class="val">${totalEst}</div><div class="lbl">Estilistas</div></div>
+    <div class="rkpi"><div class="val">$${fmt(totalCitas?totalIng/totalCitas:0)}</div><div class="lbl">Ticket Prom. Red</div></div>
+  `;
+
+  // ── Ranking sucursales ────────────────────────────
+  const ranking = sucursales.map(s=>{
+    const d=DB[s];
+    const ing = d.pagos.reduce((a,p)=>a+p.monto,0);
+    const cit = d.citas.length;
+    return { suc:s, ing, cit, ests:d.estilistas.length, ticket:cit?ing/cit:0 };
+  }).sort((a,b)=>b.ing-a.ing);
+
+  const maxIng = ranking[0]?.ing || 1;
+  const medallas = ['🥇','🥈','🥉'];
+  const clases   = ['gold','silver','bronze'];
+
+  // Podio top 3
+  const podioHTML = ranking.slice(0,3).map((r,i)=>`
+    <div class="podio-item ${clases[i]||''}">
+      <div class="podio-corona">${medallas[i]||'🏅'}</div>
+      <div class="podio-pos ${clases[i]||''}">${['1er lugar','2do lugar','3er lugar'][i]}</div>
+      <div class="podio-suc">${r.suc}</div>
+      <div class="podio-ing">$${fmt(r.ing)}</div>
+      <div class="podio-sub">${r.cit} citas</div>
+    </div>
+  `).join('');
+  document.getElementById('corpPodio').innerHTML = podioHTML || '<p style="color:#333;font-size:.8rem;">Sin actividad registrada</p>';
+
+  // Tabla ranking completo
+  document.getElementById('corpRankBody').innerHTML = ranking.map((r,i)=>{
+    const pct = (r.ing/maxIng*100).toFixed(0);
+    const medal = i<3 ? medallas[i] : `${i+1}`;
+    return `<tr>
+      <td><strong style="color:${i===0?'#c9a84c':i===1?'#888':i===2?'#a06020':'#fff'}">${medal}</strong></td>
+      <td><strong style="color:#fff">${r.suc}</strong>
+        <div class="corp-bar"><div class="corp-bar-fill" style="width:${pct}%"></div></div>
+      </td>
+      <td><strong style="color:#c8004a">$${fmt(r.ing)}</strong></td>
+      <td>${r.cit}</td>
+      <td>$${fmt(r.ticket)}</td>
+      <td>${r.ests}</td>
+      <td style="color:${i===0?'#c9a84c':'#555'}">${i===0?'🔥 Líder':i===1?'↑ Fuerte':'—'}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" style="color:#222">Sin datos</td></tr>';
+
+  // ── Mejor estilista de la red (MVP) ───────────────
+  const todosEst = [];
+  sucursales.forEach(s=>{
+    const d = DB[s];
+    d.estilistas.forEach(e=>{
+      const citasEst = d.citas.filter(c=>c.estilista===e.id);
+      const ing = citasEst.reduce((a,c)=>{ const srv=d.servicios.find(x=>x.id===c.servicio); return a+(srv?.precio||0); },0);
+      const comp = citasEst.filter(c=>c.estado==='completada').length;
+      todosEst.push({ nombre:e.nombre, especialidad:e.especialidad, sucursal:s, citas:citasEst.length, completadas:comp, ing, ticket:citasEst.length?ing/citasEst.length:0 });
+    });
+  });
+  todosEst.sort((a,b)=>b.ing-a.ing || b.citas-a.citas);
+
+  const mvp = todosEst[0];
+  if(mvp){
+    document.getElementById('corpMvp').innerHTML=`
+      <div class="mvp-wrap">
+        <div class="mvp-ico">💈</div>
+        <div class="mvp-info">
+          <div class="mvp-nombre">${mvp.nombre}</div>
+          <div class="mvp-suc">📍 ${mvp.sucursal} · ${mvp.especialidad}</div>
+          <div class="mvp-stats">
+            <div class="mvp-stat"><div class="val">$${fmt(mvp.ing)}</div><div class="lbl">Ingresos</div></div>
+            <div class="mvp-stat"><div class="val">${mvp.citas}</div><div class="lbl">Citas</div></div>
+            <div class="mvp-stat"><div class="val">${mvp.completadas}</div><div class="lbl">Completadas</div></div>
+            <div class="mvp-stat"><div class="val">$${fmt(mvp.ticket)}</div><div class="lbl">Ticket Prom.</div></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Top 5 estilistas tabla
+  document.getElementById('corpTopEst').innerHTML = todosEst.slice(0,8).map((e,i)=>`
+    <tr>
+      <td><strong style="color:${i===0?'#c9a84c':i===1?'#888':i===2?'#a06020':'#fff'}">${i<3?medallas[i]:i+1}</strong></td>
+      <td><strong style="color:#fff">${e.nombre}</strong></td>
+      <td><span style="font-size:.72rem;color:#555">${e.sucursal}</span></td>
+      <td style="color:#444;font-size:.78rem">${e.especialidad}</td>
+      <td>${e.citas}</td>
+      <td><strong style="color:${i===0?'#c8004a':'#fff'}">$${fmt(e.ing)}</strong></td>
+      <td>$${fmt(e.ticket)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" style="color:#222">Sin datos</td></tr>';
+}
+
+const CSVD={
+  resumen:()=>{const p=filtF(D().pagos),c=filtF(D().citas),t=S(p,'monto');return[['Métrica','Valor'],['Ingresos','$'+fmt(t)],['Citas',c.length],['Desde Portal',c.filter(x=>x.origen==='portal').length],['Ticket Prom.','$'+fmt(c.length?t/c.length:0)]];},
+  citas:()=>[['Fecha','Hora','Cliente','Tel','Servicio','Estilista','Estado','Origen','Precio'],...filtF(D().citas).map(c=>{const s=D().servicios.find(x=>x.id===c.servicio),e=D().estilistas.find(x=>x.id===c.estilista);return[c.fecha,c.hora,c.cliente,c.tel,s?.nombre,e?.nombre,c.estado,c.origen||'sistema','$'+fmt(s?.precio||0)];})],
+  ingresos:()=>[['Fecha','Cliente','Concepto','Método','Monto'],...filtF(D().pagos).map(p=>[p.fecha,p.cliente,p.concepto,p.metodo,'$'+fmt(p.monto)])],
+  estilistas:()=>[['Estilista','Citas','Ingresos','Ticket'],...D().estilistas.map(e=>{const c=filtF(D().citas).filter(x=>x.estilista===e.id),i=c.reduce((a,x)=>{const s=D().servicios.find(y=>y.id===x.servicio);return a+(s?.precio||0);},0);return[e.nombre,c.length,'$'+fmt(i),'$'+fmt(c.length?i/c.length:0)];})],
+  servicios:()=>[['Servicio','Precio','Veces','Ingresos','%'],...D().servicios.map(s=>{const c=filtF(D().citas).filter(x=>x.servicio===s.id),i=c.length*s.precio,t=filtF(D().citas).length||1;return[s.nombre,'$'+s.precio,c.length,'$'+fmt(i),(c.length/t*100).toFixed(1)+'%'];})],
+  inventario:()=>[['Producto','Stock','Estado','Venta','Costo','Margen','Valor'],...D().inventario.map(p=>{const m=p.pc?((p.pv-p.pc)/p.pv*100).toFixed(1)+'%':'—',e=p.stock===0?'Agotado':p.stock<=p.min?'Bajo':'OK';return[p.nombre,p.stock,e,'$'+p.pv,'$'+p.pc,m,'$'+fmt(p.pv*p.stock)];})],
+  metodos:()=>{const pg=filtF(D().pagos),m={};pg.forEach(x=>{if(!m[x.metodo])m[x.metodo]={c:0,t:0};m[x.metodo].c++;m[x.metodo].t+=x.monto;});const tot=Object.values(m).reduce((a,x)=>a+x.t,0)||1;return[['Método','Trans.','Total','%','Promedio'],...Object.entries(m).map(([k,v])=>[k,v.c,'$'+fmt(v.t),(v.t/tot*100).toFixed(1)+'%','$'+fmt(v.t/v.c)])];},
+  pendientes:()=>{const pnd=D().citas.filter(c=>!D().pagos.some(p=>p.cliente===c.cliente));return[['Fecha','Cliente','Servicio','Estilista','Monto'],...filtF(pnd).map(c=>{const s=D().servicios.find(x=>x.id===c.servicio),e=D().estilistas.find(x=>x.id===c.estilista);return[c.fecha,c.cliente,s?.nombre,e?.nombre,'$'+fmt(s?.precio||0)];})];},
+};
+function expCSV(tipo){const rows=CSVD[tipo]();const csv=rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download=`LaLogia_${tipo}_${today()}.csv`;a.click();}
+const TITULOS={resumen:'Resumen',citas:'Citas',ingresos:'Ingresos',estilistas:'Estilistas',servicios:'Servicios',inventario:'Inventario',metodos:'Métodos de Pago',pendientes:'Pendientes'};
+function impR(tipo){const r=CSVD[tipo](),ini=V('rIni'),fin=V('rFin');const th=r[0].map(c=>`<th style="background:#f0f0f0;border:1px solid #ccc;padding:5px 8px;font-size:11px;">${c}</th>`).join('');const tb=r.slice(1).map(row=>`<tr>${row.map(c=>`<td style="border:1px solid #ddd;padding:4px 8px;font-size:11px;">${c||''}</td>`).join('')}</tr>`).join('');const w=window.open('','_blank');w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>La Logia · ${TITULOS[tipo]}</title><style>body{font-family:'Segoe UI',sans-serif;padding:2rem;color:#111}h1{font-size:1.3rem;letter-spacing:.12em;margin-bottom:.2rem}.sub{color:#888;font-size:.75rem;margin-bottom:1.2rem}table{width:100%;border-collapse:collapse}@media print{.nobp{display:none}}</style></head><body><h1>LA LOGIA — ${TITULOS[tipo].toUpperCase()}</h1><div class="sub">Sucursal: ${ses.sucursal} · ${ini||'—'} → ${fin||'—'} · ${today()}</div><button class="nobp" onclick="window.print()" style="margin-bottom:1rem;padding:.45rem 1.1rem;cursor:pointer;font-weight:600;">🖨 Imprimir / PDF</button><table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></body></html>`);w.document.close();}
+
+/* ══════════════════════
+   SELECTS
+══════════════════════ */
+function refreshSel(){
+  document.getElementById('cSrv').innerHTML='<option value="">— Servicio —</option>'+D().servicios.map(s=>`<option value="${s.id}">${s.nombre} — $${s.precio}</option>`).join('');
+  document.getElementById('cEst').innerHTML='<option value="">— Estilista —</option>'+D().estilistas.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join('');
+}
+
+/* ══════════════════════
+   BOOKING (cliente)
+══════════════════════ */
+let bkSt={step:1,sucursal:null,sucKey:null,servicio:null,estilista:null,fecha:null,hora:null,nombre:'',tel:'',notas:''};
+const HORAS=['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
+
+function getBkDB(){
+  try{const raw=localStorage.getItem('la-logia-db');if(raw){const all=JSON.parse(raw);if(all[bkSt.sucursal])return all[bkSt.sucursal];}}catch(e){}
+  return{estilistas:[{id:1,nombre:'María García',especialidad:'Cortes modernos'},{id:2,nombre:'Laura Rodríguez',especialidad:'Alisados y tintes'}],servicios:[{id:1,nombre:'Corte clásico',precio:250,duracion:30},{id:2,nombre:'Tinte completo',precio:450,duracion:90},{id:3,nombre:'Mechas',precio:600,duracion:120},{id:4,nombre:'Peinado',precio:350,duracion:45}],citas:[],config:{wa:''}};
+}
+
+function mostrarBooking(sucKey){
+  const entry=Object.entries(USERS).find(([u,d])=>d.key===sucKey);
+  // Si es admin o no existe la sucursal, ir al login
+  if(!entry||entry[1].rol==='admin'){
+    showScreen('loginScreen');
+    return;
+  }
+  bkSt={step:1,sucursal:entry[1].suc,sucKey,servicio:null,estilista:null,fecha:null,hora:null,nombre:'',tel:'',notas:''};
+  document.getElementById('bkSucNombre').textContent=entry[1].suc;
+  showScreen('bookingPage');
+  renderStepper();renderBkSrv();
+  const hoy=today();
+  document.getElementById('bkFecha').min=hoy;document.getElementById('bkFecha').value=hoy;
+  renderTimeSlots();
+  for(let i=1;i<=6;i++)document.getElementById('step'+i).style.display=i===1?'block':'none';
+}
+
+function renderStepper(){
+  const labels=['Servicio','Estilista','Fecha','Datos','Confirmar'],s=bkSt.step;
+  document.getElementById('stepper').innerHTML=labels.map((l,i)=>{const n=i+1,done=n<s,act=n===s;return`${i>0?`<div class="stp-line ${done?'dn':''}"></div>`:''}
+  <div class="stp"><div class="stp-n ${done?'dn':act?'act':''}">${done?'✓':n}</div><div class="stp-l ${act?'act':''}">${l}</div></div>`;}).join('');
+}
+
+function renderBkSrv(){const db=getBkDB();document.getElementById('bkSrvGrid').innerHTML=db.servicios.map(s=>`<div class="srv-card ${bkSt.servicio===s.id?'sel':''}" onclick="selSrv(${s.id},this)"><h3>${s.nombre}</h3><div class="price">$${s.precio.toLocaleString('es-MX')}</div><div class="dur">⏱ ${s.duracion} min</div></div>`).join('');}
+function selSrv(id,el){bkSt.servicio=id;document.querySelectorAll('.srv-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function renderBkEst(){const db=getBkDB();document.getElementById('bkEstGrid').innerHTML=`<div class="est-card ${bkSt.estilista===0?'sel':''}" onclick="selEst(0,this)"><h3>Sin preferencia</h3><p>Cualquier estilista disponible</p></div>`+db.estilistas.map(e=>`<div class="est-card ${bkSt.estilista===e.id?'sel':''}" onclick="selEst(${e.id},this)"><h3>${e.nombre}</h3><p>🎨 ${e.especialidad}</p></div>`).join('');}
+function selEst(id,el){bkSt.estilista=id;document.querySelectorAll('.est-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function renderTimeSlots(){
+  const fecha=document.getElementById('bkFecha').value;bkSt.fecha=fecha;
+  const db=getBkDB(),ocupados=(db.citas||[]).filter(c=>c.fecha===fecha).map(c=>c.hora);
+  document.getElementById('bkTimeGrid').innerHTML=HORAS.map(h=>{const taken=ocupados.includes(h);return`<div class="tslot ${taken?'taken':bkSt.hora===h?'sel':''}" onclick="${taken?'':'selHora(\''+h+'\',this)'}">${h}</div>`;}).join('');
+}
+function selHora(h,el){bkSt.hora=h;document.querySelectorAll('.tslot:not(.taken)').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+
+function bkNext(to){
+  if(to===2&&!bkSt.servicio){alert('Selecciona un servicio');return;}
+  if(to===3&&bkSt.estilista===null){alert('Selecciona un estilista');return;}
+  if(to===4&&!bkSt.hora){alert('Selecciona un horario');return;}
+  if(to===5){const n=document.getElementById('bkNombre').value.trim(),t=document.getElementById('bkTel').value.trim();if(!n||!t){alert('Nombre y teléfono obligatorios');return;}bkSt.nombre=n;bkSt.tel=t;bkSt.notas=document.getElementById('bkNotas').value;renderBkResumen('bkResumen');}
+  bkSt.step=to;for(let i=1;i<=6;i++)document.getElementById('step'+i).style.display=i===to?'block':'none';renderStepper();
+  if(to===2)renderBkEst();if(to===3)renderTimeSlots();
+}
+function bkBack(to){bkSt.step=to;for(let i=1;i<=6;i++)document.getElementById('step'+i).style.display=i===to?'block':'none';renderStepper();if(to===1)renderBkSrv();if(to===2)renderBkEst();}
+
+function renderBkResumen(elId){
+  const db=getBkDB(),srv=db.servicios.find(s=>s.id===bkSt.servicio),est=bkSt.estilista===0?{nombre:'Sin preferencia'}:db.estilistas.find(e=>e.id===bkSt.estilista);
+  document.getElementById(elId).innerHTML=`<div class="res-row"><span>📍 Sucursal</span><span>${bkSt.sucursal}</span></div><div class="res-row"><span>🪒 Servicio</span><span>${srv?.nombre||'—'} · $${srv?.precio?.toLocaleString('es-MX')||0}</span></div><div class="res-row"><span>👤 Estilista</span><span>${est?.nombre||'—'}</span></div><div class="res-row"><span>📅 Fecha</span><span>${bkSt.fecha}</span></div><div class="res-row"><span>⏰ Hora</span><span>${bkSt.hora}</span></div><div class="res-row"><span>👤 Nombre</span><span>${bkSt.nombre}</span></div><div class="res-row"><span>📞 WhatsApp</span><span>${bkSt.tel}</span></div>${bkSt.notas?`<div class="res-row"><span>📝 Notas</span><span>${bkSt.notas}</span></div>`:''}`;
+}
+
+function confirmarCita(){
+  const db=getBkDB(),srv=db.servicios.find(s=>s.id===bkSt.servicio),est=bkSt.estilista===0?db.estilistas[0]:db.estilistas.find(e=>e.id===bkSt.estilista);
+  const nueva={id:Date.now(),cliente:bkSt.nombre,tel:bkSt.tel,servicio:srv?.id||bkSt.servicio,estilista:est?.id||1,fecha:bkSt.fecha,hora:bkSt.hora,estado:'nueva',notas:bkSt.notas,origen:'portal'};
+  try{const raw=localStorage.getItem('la-logia-pending')||'[]';const p=JSON.parse(raw);p.push({cita:nueva,sucursal:bkSt.sucursal,ts:Date.now()});localStorage.setItem('la-logia-pending',JSON.stringify(p));}catch(e){}
+  try{const ch=new BroadcastChannel('la-logia');ch.postMessage({type:'nueva-cita',sucursal:bkSt.sucursal,cita:nueva});setTimeout(()=>ch.close(),1000);}catch(e){}
+  bkSt.step=6;for(let i=1;i<=6;i++)document.getElementById('step'+i).style.display=i===6?'block':'none';renderStepper();renderBkResumen('bkResFinal');
+  document.getElementById('bkConfMsg').textContent=`¡Hola ${bkSt.nombre}! Tu cita ha sido recibida. La sucursal te confirmará en breve vía WhatsApp.`;
+  // Número de la sucursal — si no está configurado usa el número principal de La Logia
+  const LOGIA_MAIN='5215572580643'; // +52 1 55 7258 0643
+  const waNum=(db.config?.wa||'').replace(/\D/g,'')||LOGIA_MAIN;
+  const msg=`Hola 👋 Acabo de agendar mi cita en *La Logia – ${bkSt.sucursal}*:\n\n📅 *Fecha:* ${bkSt.fecha}\n⏰ *Hora:* ${bkSt.hora}\n💈 *Servicio:* ${srv?.nombre||''}\n👤 *Estilista:* ${est?.nombre||''}\n\n*Mi nombre:* ${bkSt.nombre}\n*Mi WhatsApp:* ${bkSt.tel}${bkSt.notas?'\n📝 '+bkSt.notas:''}\n\n¡Gracias! 🙌`;
+  const btn=document.getElementById('bkWaFinal');
+  btn.onclick=()=>window.open('https://wa.me/'+waNum+'?text='+encodeURIComponent(msg),'_blank');
+  btn.style.display='block';
+}
+
+/* ══════════════════════
+   UTILS
+══════════════════════ */
+
+/* ══════════════════════
+   CALENDARIO
+══════════════════════ */
+let calFecha=new Date();
+let calDiaSeleccionado=null;
+const HORAS_CAL=['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00',
+                 '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
+const MESES_CAL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS_CAL=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+function toggleCal(){const d=document.getElementById('calDetails');if(d)d.open=!d.open;}
+
+function calMes(delta){
+  calFecha=new Date(calFecha.getFullYear(),calFecha.getMonth()+delta,1);
+  renderCal();
+}
+
+function renderCal(){
+  const calTitulo=document.getElementById('calTitulo');
+  const calGrid=document.getElementById('calGrid');
+  if(!calTitulo||!calGrid||!ses||!DB[ses.sucursal]) return;
+
+  const año=calFecha.getFullYear(), mes=calFecha.getMonth();
+  calTitulo.textContent=MESES_CAL[mes]+' '+año;
+
+  const hoy=today();
+  // Agrupar citas por fecha
+  const citasPorDia={};
+  D().citas.forEach(c=>{
+    if(c.estado==='cancelada') return;
+    if(!citasPorDia[c.fecha]) citasPorDia[c.fecha]=[];
+    citasPorDia[c.fecha].push(c);
+  });
+
+  const primerDia=new Date(año,mes,1).getDay();
+  const diasMes=new Date(año,mes+1,0).getDate();
+  const diasMesAnt=new Date(año,mes,0).getDate();
+
+  let html='';
+  // Cabecera
+  DIAS_CAL.forEach(d=>{ html+=`<div class="cal-dow">${d}</div>`; });
+
+  // Días mes anterior
+  for(let i=primerDia-1;i>=0;i--){
+    html+=`<div class="cal-day cal-other">${diasMesAnt-i}</div>`;
+  }
+
+  // Días del mes
+  for(let d=1;d<=diasMes;d++){
+    const fechaStr=año+'-'+String(mes+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const citas=citasPorDia[fechaStr]||[];
+    const esHoy=fechaStr===hoy;
+    const esSel=fechaStr===calDiaSeleccionado;
+    const tieneCitas=citas.length>0;
+
+    let cls='cal-day';
+    if(esHoy&&!esSel) cls+=' cal-today';
+    if(esSel) cls+=' cal-selected';
+    if(tieneCitas&&!esSel) cls+=' cal-has-citas';
+
+    let dots='';
+    if(tieneCitas&&!esSel){
+      const max=Math.min(citas.length,4);
+      for(let i=0;i<max;i++) dots+=`<div class="cal-dot"></div>`;
+    }
+
+    html+=`<div class="${cls}" onclick="calSelDia('${fechaStr}')">
+      <span>${d}</span>
+      ${dots?`<div class="cal-dots">${dots}</div>`:''}
+    </div>`;
+  }
+
+  // Días siguientes
+  const total=primerDia+diasMes;
+  const restantes=(7-total%7)%7;
+  for(let d=1;d<=restantes;d++){
+    html+=`<div class="cal-day cal-other">${d}</div>`;
+  }
+
+  calGrid.innerHTML=html;
+  if(calDiaSeleccionado) calRenderPanel(calDiaSeleccionado);
+}
+
+function calSelDia(fecha){
+  calDiaSeleccionado=fecha;
+  const inputFecha=document.getElementById('cFecha');
+  if(inputFecha) inputFecha.value=fecha;
+  renderCal();
+  // Mostrar panel
+  const panel=document.getElementById('calDayPanel');
+  if(panel) panel.style.display='block';
+  calRenderPanel(fecha);
+}
+
+function calRenderPanel(fecha){
+  const panel=document.getElementById('calDayPanel');
+  if(!panel) return;
+  panel.style.display='block';
+
+  const citas=D().citas.filter(c=>c.fecha===fecha&&c.estado!=='cancelada');
+  const horasOcup={};
+  citas.forEach(c=>{
+    const srv=D().servicios.find(s=>s.id===c.servicio);
+    const est=D().estilistas.find(e=>e.id===c.estilista);
+    horasOcup[c.hora]={cliente:c.cliente,servicio:srv?.nombre||'—',estilista:est?.nombre||'—',estado:c.estado};
+  });
+
+  const [y,m,d]=fecha.split('-');
+  const fechaLabel=`${d} de ${MESES_CAL[parseInt(m)-1]} ${y}`;
+  const nLibres=HORAS_CAL.filter(h=>!horasOcup[h]).length;
+  const nOcup=Object.keys(horasOcup).length;
+
+  let slotsHTML='';
+  HORAS_CAL.forEach(h=>{
+    if(horasOcup[h]){
+      const ci=horasOcup[h];
+      slotsHTML+=`<div class="ts-slot ts-ocupado" title="${ci.cliente} · ${ci.servicio}">
+        <span>🔴 ${h}</span>
+        <span class="ts-cliente">👤 ${ci.cliente}</span>
+        <span class="ts-cliente">🪒 ${ci.servicio}</span>
+      </div>`;
+    } else {
+      slotsHTML+=`<div class="ts-slot ts-libre" onclick="selHoraCal('${h}')" title="Libre — clic para seleccionar">
+        <span>🟢 ${h}</span>
+        <span class="ts-cliente">Disponible</span>
+      </div>`;
+    }
+  });
+
+  panel.innerHTML=`<div class="cal-day-panel">
+    <h4 style="font-family:'Cinzel',serif;">${fechaLabel}
+      <span>${nLibres} libres · ${nOcup} ocupados</span>
+    </h4>
+    <div class="time-slots-grid">${slotsHTML}</div>
+  </div>`;
+}
+
+function selHoraCal(hora){
+  const input=document.getElementById('cHora');
+  if(input){ input.value=hora; }
+  document.querySelectorAll('.ts-slot.ts-libre').forEach(el=>{
+    const isThis=el.querySelector('span')?.textContent?.includes(hora);
+    el.style.background=isThis?'#1a3a1a':'';
+    el.style.borderColor=isThis?'#338833':'';
+  });
+  // Scroll al formulario
+  document.getElementById('cNombre')?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+
+/* ══ CALENDARIO POPUP (desde campo fecha) ══ */
+let calPopupAbierto = false;
+
+function toggleCalPopup(){
+  const popup = document.getElementById('calPopup');
+  if(!popup) return;
+  calPopupAbierto = !calPopupAbierto;
+  popup.style.display = calPopupAbierto ? 'block' : 'none';
+  if(calPopupAbierto) renderCalPopup();
+}
+
+function cerrarCalPopup(){
+  calPopupAbierto = false;
+  const popup = document.getElementById('calPopup');
+  if(popup) popup.style.display = 'none';
+}
+
+// Cerrar al hacer clic fuera
+document.addEventListener('click', function(e){
+  const popup = document.getElementById('calPopup');
+  if(!popup || !calPopupAbierto) return;
+  if(!e.target.closest('#calPopup') && !e.target.closest('[onclick*="toggleCalPopup"]') && e.target.id !== 'cFecha'){
+    cerrarCalPopup();
+  }
+});
+
+function renderCalPopup(){
+  if(!ses || !DB[ses.sucursal]) return;
+  const titulo = document.getElementById('calTituloP');
+  const grid   = document.getElementById('calGridP');
+  if(!titulo || !grid) return;
+
+  const año = calFecha.getFullYear(), mes = calFecha.getMonth();
+  titulo.textContent = MESES_CAL[mes] + ' ' + año;
+
+  const hoy = today();
+  const citasPorDia = {};
+  D().citas.forEach(c => {
+    if(c.estado === 'cancelada') return;
+    if(!citasPorDia[c.fecha]) citasPorDia[c.fecha] = [];
+    citasPorDia[c.fecha].push(c);
+  });
+
+  const primerDia = new Date(año, mes, 1).getDay();
+  const diasMes   = new Date(año, mes+1, 0).getDate();
+  const diasMesAnt= new Date(año, mes, 0).getDate();
+  const fechaSel  = document.getElementById('cFecha')?.value || '';
+
+  let html = '';
+  DIAS_CAL.forEach(d => { html += `<div class="cal-dow">${d.slice(0,2)}</div>`; });
+
+  for(let i = primerDia-1; i >= 0; i--)
+    html += `<div class="cal-day cal-other">${diasMesAnt-i}</div>`;
+
+  for(let d = 1; d <= diasMes; d++){
+    const f = año+'-'+String(mes+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const citas = citasPorDia[f] || [];
+    const esHoy = f === hoy;
+    const esSel = f === fechaSel;
+    const tieneCitas = citas.length > 0;
+
+    let cls = 'cal-day';
+    if(esHoy && !esSel) cls += ' cal-today';
+    if(esSel) cls += ' cal-selected';
+    if(tieneCitas && !esSel) cls += ' cal-has-citas';
+
+    let dots = '';
+    if(tieneCitas && !esSel){
+      const n = Math.min(citas.length, 4);
+      for(let i=0;i<n;i++) dots += '<div class="cal-dot"></div>';
+    }
+
+    html += `<div class="${cls}" onclick="selFechaPopup('${f}')">
+      <span>${d}</span>
+      ${dots ? `<div class="cal-dots">${dots}</div>` : ''}
+    </div>`;
+  }
+
+  const total = primerDia + diasMes;
+  const rest  = (7 - total%7) % 7;
+  for(let d=1; d<=rest; d++) html += `<div class="cal-day cal-other">${d}</div>`;
+
+  grid.innerHTML = html;
+  if(fechaSel) renderDayPanelPopup(fechaSel);
+}
+
+function selFechaPopup(fecha){
+  const input = document.getElementById('cFecha');
+  if(input) input.value = fecha;
+  // Actualizar selección visual
+  renderCalPopup();
+  renderDayPanelPopup(fecha);
+}
+
+function renderDayPanelPopup(fecha){
+  const panel = document.getElementById('calDayPanelP');
+  if(!panel) return;
+
+  const estilistas = D().estilistas;
+  const citas      = D().citas.filter(c=>c.fecha===fecha&&c.estado!=='cancelada');
+  const [y,m,d]   = fecha.split('-');
+  const estSelId   = parseInt(document.getElementById('cEst')?.value)||null;
+
+  // Mapa: hora → { estilistId → cita }
+  const mapa = {};
+  HORAS_CAL.forEach(h=>{ mapa[h]={}; });
+  citas.forEach(c=>{
+    if(mapa[c.hora]) mapa[c.hora][c.estilista]=c;
+  });
+
+  // ── Cabecera ──
+  let html = `<div style="border-top:1px solid #222;margin-top:.75rem;padding-top:.75rem;">
+    <div style="font-size:.72rem;font-weight:700;color:#fff;margin-bottom:.65rem;
+                font-family:'Cinzel',serif;letter-spacing:.04em;">
+      ${d}/${m}/${y}
+      <span style="color:#555;font-weight:400;font-family:'Inter',sans-serif;font-size:.68rem;">
+        — ${estilistas.length} estilistas
+      </span>
+    </div>`;
+
+  // ── Grid: hora × estilista ──
+  html += `<div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:.7rem;">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:.35rem .5rem;color:#555;font-weight:700;
+                     letter-spacing:.08em;border-bottom:1px solid #222;white-space:nowrap;">HORA</th>`;
+
+  estilistas.forEach(e=>{
+    const esSeleccionado = e.id === estSelId;
+    const color = esSeleccionado ? '#c8004a' : '#888';
+    html += `<th style="text-align:center;padding:.35rem .4rem;color:${color};font-weight:700;
+                        letter-spacing:.05em;border-bottom:1px solid #222;white-space:nowrap;
+                        ${esSeleccionado?'border-bottom:2px solid #c8004a;':''}"
+               title="${e.especialidad}">
+              ${e.nombre.split(' ')[0]}
+             </th>`;
+  });
+
+  html += `</tr></thead><tbody>`;
+
+  HORAS_CAL.forEach(h=>{
+    const citasEnHora = estilistas.map(e=>mapa[h][e.id]||null);
+    const todosLibres = citasEnHora.every(c=>!c);
+
+    html += `<tr style="border-bottom:1px solid #1a1a1a;" 
+               onmouseover="this.style.background='#161616'"
+               onmouseout="this.style.background=''">
+      <td style="padding:.4rem .5rem;color:#aaa;font-weight:600;white-space:nowrap;">${h}</td>`;
+
+    estilistas.forEach(e=>{
+      const cita = mapa[h][e.id];
+      const esSeleccionado = e.id === estSelId;
+      if(cita){
+        const srv = D().servicios.find(s=>s.id===cita.servicio);
+        html += `<td style="text-align:center;padding:.35rem .4rem;
+                            ${esSeleccionado?'background:#1a0018;':''}">
+          <div style="background:#2a0d0d;border:1px solid #554444;border-radius:.3rem;
+                      padding:.25rem .4rem;cursor:default;" title="${cita.cliente} · ${srv?.nombre||''}">
+            <div style="color:#cc6666;font-weight:700;font-size:.65rem;">🔴</div>
+            <div style="color:#cc8888;font-size:.62rem;white-space:nowrap;overflow:hidden;
+                        max-width:60px;text-overflow:ellipsis;">${cita.cliente.split(' ')[0]}</div>
+          </div>
+        </td>`;
+      } else {
+        html += `<td style="text-align:center;padding:.35rem .4rem;
+                            ${esSeleccionado?'background:#0a1a0a;':''}">
+          <div onclick="selEstilistaHoraPopup(${e.id},'${h}')"
+               style="background:#0d1a0d;border:1px solid #224422;border-radius:.3rem;
+                      padding:.25rem .4rem;cursor:pointer;transition:all .2s;"
+               onmouseover="this.style.background='#1a3a1a'"
+               onmouseout="this.style.background='#0d1a0d'"
+               title="Libre — clic para seleccionar ${e.nombre} a las ${h}">
+            <div style="color:#4a8a4a;font-size:.65rem;">🟢</div>
+          </div>
+        </td>`;
+      }
+    });
+    html += '</tr>';
+  });
+
+  html += `</tbody></table></div>
+  <div style="display:flex;gap:1rem;margin-top:.65rem;font-size:.65rem;">
+    <span style="color:#cc8888;">🔴 Ocupado</span>
+    <span style="color:#4a8a4a;">🟢 Libre — clic para seleccionar</span>
+    <span style="color:#c8004a;">▐ Estilista seleccionado</span>
+  </div>
+  </div>`;
+
+  panel.innerHTML = html;
+}
+
+
+/* ══ VERIFICACIÓN EN TIEMPO REAL ══ */
+function checkDisponibilidad(){
+  const estiId  = parseInt(document.getElementById('cEst')?.value)||null;
+  const fecha   = document.getElementById('cFecha')?.value||'';
+  const hora    = document.getElementById('cHora')?.value||'';
+  const alertDiv = document.getElementById('disponibilidadAlert');
+  if(!alertDiv) return;
+
+  if(!estiId||!fecha||!hora){ alertDiv.style.display='none'; return; }
+
+  const conflicto = D().citas.find(c=>
+    c.estilista===estiId && c.fecha===fecha && c.hora===hora && c.estado!=='cancelada'
+  );
+
+  if(conflicto){
+    const est = D().estilistas.find(e=>e.id===estiId);
+    const srv = D().servicios.find(s=>s.id===conflicto.servicio);
+    alertDiv.innerHTML = `⚠️ <strong>${est?.nombre||'Este estilista'}</strong> ya tiene una cita a las <strong>${hora}</strong> con <strong>${conflicto.cliente}</strong> (${srv?.nombre||'—'})`;
+    alertDiv.style.display = 'block';
+  } else {
+    alertDiv.style.display = 'none';
+  }
+}
+
+function selEstilistaHoraPopup(estiId, hora){
+  // Seleccionar estilista y hora en el formulario
+  const selEst  = document.getElementById('cEst');
+  const selHora = document.getElementById('cHora');
+  if(selEst)  selEst.value  = estiId;
+  if(selHora) selHora.value = hora;
+  // Re-renderizar para mostrar el estilista seleccionado
+  const fecha = document.getElementById('cFecha')?.value;
+  if(fecha) renderDayPanelPopup(fecha);
+  // Verificar disponibilidad
+  checkDisponibilidad();
+  // Cerrar popup
+  cerrarCalPopup();
+}
+
+function selHoraPopup(hora){
+  const input = document.getElementById('cHora');
+  if(input) input.value = hora;
+  cerrarCalPopup();
+  // Scroll al formulario
+  document.getElementById('cNombre')?.focus();
+}
+
+
+/* ══ DROPDOWN CITAS DEL DÍA (COBRANZA) ══ */
+let dropAbierto=false;
+
+function abrirDropCitas(){
+  const drop=document.getElementById('dropCitas');
+  if(!drop) return;
+  dropAbierto=true;
+  drop.style.display='block';
+  renderDropCitas();
+}
+function cerrarDropCitas(){
+  dropAbierto=false;
+  const drop=document.getElementById('dropCitas');
+  if(drop) drop.style.display='none';
+}
+function filtrarClientesHoy(){
+  if(dropAbierto) renderDropCitas();
+}
+
+document.addEventListener('click',function(e){
+  if(!dropAbierto) return;
+  if(!e.target.closest('#dropCitas')&&!e.target.closest('[onclick*="abrirDropCitas"]')&&e.target.id!=='pCl') cerrarDropCitas();
+});
+
+function renderDropCitas(){
+  const hoy=today();
+  const query=(V('pCl')||'').toLowerCase();
+  const pagosHoy=D().pagos.filter(p=>p.fecha===hoy).map(p=>p.cliente);
+  let citas=D().citas.filter(c=>c.fecha===hoy&&c.estado!=='cancelada').sort((a,b)=>a.hora.localeCompare(b.hora));
+  if(query) citas=citas.filter(c=>c.cliente.toLowerCase().includes(query));
+  const lista=document.getElementById('dropCitasList');
+  const count=document.getElementById('dropCitasCount');
+  if(count) count.textContent=citas.length+' cita(s)';
+  if(!citas.length){
+    lista.innerHTML=`<div style="padding:1.25rem;text-align:center;color:#333;font-size:.8rem;">${query?'Sin coincidencias':'Sin citas agendadas hoy'}</div>`;
+    return;
+  }
+  lista.innerHTML=citas.map(c=>{
+    const srv=D().servicios.find(s=>s.id===c.servicio);
+    const est=D().estilistas.find(e=>e.id===c.estilista);
+    const yaPagado=pagosHoy.includes(c.cliente);
+    const esc=c.cliente.replace(/'/g,"\'");
+    if(yaPagado){
+      return `<div class="cita-drop-item" style="opacity:.38;cursor:not-allowed;pointer-events:none;">
+        <div class="cdi-hora">${c.hora}</div>
+        <div class="cdi-info">
+          <strong>${c.cliente}</strong>
+          <span>🪒 ${srv?.nombre||'—'} &nbsp;·&nbsp; 👤 ${est?.nombre||'—'}</span>
+        </div>
+        <div style="text-align:right;">
+          <div class="cdi-precio" style="text-decoration:line-through;color:#444;">$${fmt(srv?.precio||0)}</div>
+          <div class="cdi-pagado">✅ Ya cobrado</div>
+        </div>
+      </div>`;
+    }
+    return `<div class="cita-drop-item" onclick="selCitaPago('${esc}',${c.id})">
+      <div class="cdi-hora">${c.hora}</div>
+      <div class="cdi-info">
+        <strong>${c.cliente}</strong>
+        <span>🪒 ${srv?.nombre||'—'} &nbsp;·&nbsp; 👤 ${est?.nombre||'—'}</span>
+      </div>
+      <div style="text-align:right;">
+        <div class="cdi-precio">$${fmt(srv?.precio||0)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selCitaPago(nombre,citaId){
+  // Bloquear si el cliente ya tiene un pago registrado hoy
+  const hoy=today();
+  const yaFuePagado=D().pagos.some(p=>p.fecha===hoy&&p.cliente===nombre);
+  if(yaFuePagado){ alert('⚠️ Este cliente ya tiene un cobro registrado hoy. Para evitar duplicados no se puede volver a cargar.'); return; }
+  document.getElementById('pCl').value=nombre;
+  cerrarDropCitas();
+  const cita=D().citas.find(c=>c.id===citaId);
+  if(!cita) return;
+  const srv=D().servicios.find(s=>s.id===cita.servicio);
+  // Cargar ticket con el servicio de la cita
+  ticketItems=[];
+  if(srv) ticketItems.push({id:Date.now(),nombre:srv.nombre,precio:srv.precio,tipo:'servicio',fijo:true});
+  renderTicket();
+  actualizarItemsDisp();
+}
+
+function renderTicket(){
+  const el=document.getElementById('ticketItems');
+  const total=ticketItems.reduce((a,i)=>a+i.precio,0);
+  document.getElementById('ticketTotal').textContent='$'+fmt(total);
+  document.getElementById('ticketCount').textContent=ticketItems.length+' item'+(ticketItems.length!==1?'s':'');
+  if(!ticketItems.length){
+    el.innerHTML='<div class="ticket-empty">Selecciona un cliente del día o agrega items manualmente</div>';
+    return;
+  }
+  el.innerHTML=ticketItems.map((i,idx)=>{
+    const esPrincipal=i.fijo&&idx===0;
+    const ico=i.tipo==='servicio'?'🪒':i.tipo==='merch'?'📦':'💲';
+    return `<div class="ticket-item" style="${esPrincipal?'border-left:3px solid #c8004a;':''}">
+      <span class="ticket-item-name">
+        ${ico} ${i.nombre}
+        ${esPrincipal?'<span style="font-size:.62rem;color:#c8004a;font-weight:700;margin-left:.4rem;letter-spacing:.05em;">CITA</span>':''}
+      </span>
+      <span style="display:flex;align-items:center;gap:.25rem;">
+        <span class="ticket-item-price">$${fmt(i.precio)}</span>
+        ${esPrincipal
+          ?'<span style="color:#333;font-size:.7rem;" title="Servicio principal de la cita">🔒</span>'
+          :`<button class="ticket-item-del" onclick="delItemTicket(${i.id})">✕</button>`}
+      </span>
+    </div>`;
+  }).join('');
+}
+
+
+/* ══ TICKET DE PAGO — FUNCIONES ══ */
+let ticketItems=[];
+
+function actualizarItemsDisp(){
+  if(!ses||!DB[ses.sucursal]) return;
+  const tipo  = document.getElementById('pTipo')?.value || 'servicio';
+  const wrap  = document.getElementById('pItemWrap');
+  const sel   = document.getElementById('pItem');
+  const precio= document.getElementById('pItemPrecio');
+  if(!sel) return;
+
+  if(tipo==='servicio'){
+    if(wrap) wrap.style.display='flex';
+    const lbl = wrap?.querySelector('label');
+    if(lbl) lbl.textContent='Servicio';
+    sel.innerHTML='<option value="">— Selecciona servicio —</option>'+
+      D().servicios.map(s=>`<option value="${s.id}" data-precio="${s.precio}">${s.nombre} — $${s.precio}</option>`).join('');
+    actualizarPrecioItem();
+  } else if(tipo==='merch'){
+    if(wrap) wrap.style.display='flex';
+    const lbl = wrap?.querySelector('label');
+    if(lbl) lbl.textContent='Producto';
+    sel.innerHTML='<option value="">— Selecciona producto —</option>'+
+      D().inventario.map(p=>`<option value="${p.id}" data-precio="${p.pv}">${p.nombre} — $${p.pv}</option>`).join('');
+    actualizarPrecioItem();
+  } else {
+    if(wrap) wrap.style.display='none';
+    if(precio) precio.value='';
+  }
+}
+
+function actualizarPrecioItem(){
+  const sel   = document.getElementById('pItem');
+  const precio= document.getElementById('pItemPrecio');
+  if(!sel||!precio) return;
+  const opt = sel.options[sel.selectedIndex];
+  const p   = opt?.dataset?.precio;
+  if(p) precio.value = p;
+}
+
+function addItemTicket(){
+  const tipo  = document.getElementById('pTipo')?.value||'servicio';
+  const sel   = document.getElementById('pItem');
+  const precio= parseFloat(document.getElementById('pItemPrecio')?.value)||0;
+  if(!precio){alert('Ingresa o selecciona un precio');return;}
+
+  let nombre='';
+  if(tipo==='servicio'){
+    const srv=D().servicios.find(s=>s.id===parseInt(sel?.value));
+    if(!srv&&sel?.value){nombre='Servicio extra';}
+    else if(srv) nombre=srv.nombre;
+    else{alert('Selecciona un servicio');return;}
+  } else if(tipo==='merch'){
+    const prod=D().inventario.find(p=>p.id===parseInt(sel?.value));
+    if(!prod&&sel?.value){nombre='Producto';}
+    else if(prod) nombre=prod.nombre;
+    else{alert('Selecciona un producto');return;}
+  } else {
+    nombre='Cargo adicional';
+  }
+
+  ticketItems.push({id:Date.now(),nombre,precio,tipo,fijo:false});
+  renderTicket();
+  // Limpiar precio para el siguiente
+  const pi=document.getElementById('pItemPrecio');
+  if(pi) pi.value='';
+  // Resetear select
+  if(sel) sel.selectedIndex=0;
+}
+
+function delItemTicket(id){
+  ticketItems=ticketItems.filter(i=>i.id!==id);
+  renderTicket();
+}
+
+function limpiarTicket(){
+  ticketItems=[];
+  renderTicket();
+}
+
+
+/* ══ RESUMEN / TICKET ANTES DE PAGAR ══ */
+let pagoTemporal = null; // Datos del pago a confirmar
+
+function mostrarResumenPago(){
+  const cl = V('pCl');
+  const me = V('pMe');
+  const fe = V('pFe');
+  const ho = V('pHo');
+
+  // Validaciones
+  if(!cl){ alert('⚠️ Selecciona o escribe el nombre del cliente'); document.getElementById('pCl')?.focus(); return; }
+  if(!ticketItems.length){ alert('⚠️ Agrega al menos un servicio o producto'); return; }
+  if(!fe||!ho){ alert('⚠️ Completa la fecha y hora'); return; }
+
+  const total = ticketItems.reduce((a,i)=>a+i.precio,0);
+
+  // Guardar datos temporales
+  pagoTemporal = { cl, me, fe, ho, total, items:[...ticketItems] };
+
+  // Llenar el popup
+  document.getElementById('tkSucursal').textContent  = ses.sucursal;
+  document.getElementById('tkCliente').textContent   = cl;
+  document.getElementById('tkFechaHora').textContent = fe + '  ·  ' + ho;
+  document.getElementById('tkSubtotal').textContent  = '$' + fmt(total);
+  document.getElementById('tkTotal').textContent     = '$' + fmt(total);
+  document.getElementById('tkMetodo').textContent    = me;
+
+  // Items
+  document.getElementById('tkItems').innerHTML = ticketItems.map((i,idx)=>{
+    const esPrincipal = i.fijo && idx===0;
+    const ico = i.tipo==='servicio'?'🪒':i.tipo==='merch'?'📦':'💲';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:.45rem 0;border-bottom:1px solid #141414;">
+      <span style="font-size:.82rem;color:${esPrincipal?'#e0e0e0':'#aaa'};">
+        ${ico} ${i.nombre}
+        ${esPrincipal?'<span style="font-size:.6rem;color:#c8004a;font-weight:700;margin-left:.3rem;">CITA</span>':''}
+      </span>
+      <span style="font-size:.88rem;font-weight:700;color:#fff;white-space:nowrap;margin-left:.75rem;">
+        $${fmt(i.precio)}
+      </span>
+    </div>`;
+  }).join('');
+
+  // Mostrar popup
+  document.getElementById('popTicket').classList.add('show');
+}
+
+function confirmarPagoFinal(){
+  if(!pagoTemporal) return;
+  const {cl,me,fe,ho,total} = pagoTemporal;
+
+  // Determinar concepto
+  const tipos = [...new Set(ticketItems.map(i=>i.tipo))];
+  let concepto = 'Mixto';
+  if(tipos.length===1){
+    if(tipos[0]==='servicio') concepto='Servicio';
+    else if(tipos[0]==='merch') concepto='Merch';
+    else concepto='Manual';
+  }
+
+  D().pagos.push({
+    id: Date.now(),
+    cliente: cl, concepto,
+    detalle: ticketItems.map(i=>i.nombre).join(', '),
+    monto: total, metodo: me, fecha: fe, hora: ho,
+    items: [...ticketItems]
+  });
+
+  C('pCl'); limpiarTicket(); pagoTemporal=null;
+  cerrarPop('popTicket');
+  saveDB(); renderCobranza();
+
+  // Feedback
+  const btn=document.querySelector('[onclick="mostrarResumenPago()"]');
+  if(btn){
+    const orig=btn.innerHTML;
+    btn.innerHTML='✅ Pago registrado — $'+fmt(total);
+    btn.style.background='#1a4a1a';
+    setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';},2500);
+  }
+}
+
+function imprimirTicket(){
+  if(!pagoTemporal) return;
+  const {cl,me,fe,ho,total} = pagoTemporal;
+
+  const itemsHTML = ticketItems.map((i,idx)=>{
+    const esPrincipal=i.fijo&&idx===0;
+    const ico=i.tipo==='servicio'?'✂':'📦';
+    return `<tr>
+      <td style="padding:6px 0;border-bottom:1px dashed #ddd;font-size:13px;color:#333;">
+        ${ico} ${i.nombre}${esPrincipal?' <span style="font-size:9px;color:#a80040;font-weight:700;">CITA</span>':''}
+      </td>
+      <td style="padding:6px 0;border-bottom:1px dashed #ddd;font-size:13px;font-weight:700;text-align:right;color:#111;">
+        $${fmt(i.precio)}
+      </td>
+    </tr>`;
+  }).join('');
+
+  const w = window.open('','_blank','width=400,height=600');
+  w.document.write(`<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>La Logia · Ticket</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#111;max-width:320px;margin:0 auto;padding:20px 16px;}
+    .logo{text-align:center;padding:16px 0 10px;border-bottom:2px solid #111;margin-bottom:14px;}
+    .logo img{display:block;margin:0 auto 4px;height:60px;width:auto;object-fit:contain;}
+    .logo h1{font-family:'Cinzel',serif;font-size:22px;font-weight:900;letter-spacing:.2em;color:#000;}
+    .logo p{font-size:9px;color:#a80040;letter-spacing:.2em;font-weight:700;margin-top:2px;}
+    .logo .suc{font-size:10px;color:#666;margin-top:4px;letter-spacing:.1em;}
+    .cliente-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;margin-bottom:10px;}
+    .cliente-row span:first-child{font-size:10px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:.1em;}
+    .cliente-row span:last-child{font-size:14px;font-weight:700;color:#111;font-family:'Cinzel',serif;}
+    table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+    .lbl{font-size:9px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding-bottom:6px;display:block;border-bottom:1px solid #111;margin-bottom:4px;}
+    .total-row{display:flex;justify-content:space-between;align-items:center;
+               border-top:2px solid #111;padding-top:10px;margin-top:4px;}
+    .total-row span:first-child{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+    .total-row span:last-child{font-size:20px;font-weight:900;color:#a80040;font-family:'Cinzel',serif;}
+    .metodo{text-align:right;font-size:10px;color:#888;margin-top:4px;}
+    .footer{text-align:center;margin-top:18px;padding-top:12px;border-top:1px dashed #ccc;}
+    .footer p{font-size:9px;color:#aaa;letter-spacing:.1em;font-family:'Cinzel',serif;line-height:1.6;}
+    .fecha{font-size:10px;color:#888;text-align:center;margin-bottom:12px;}
+    @media print{.no-print{display:none;}}
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <!-- Logo La Logia — reemplazar src con la imagen real cuando esté lista -->
+    <img src="LOGO_LA_LOGIA.png"
+         alt="La Logia Barberías"
+         style="height:60px;width:auto;object-fit:contain;margin-bottom:6px;"
+         onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'">
+    <div id="logoFallback" style="display:none;">
+      <h1>LA LOGIA</h1>
+      <p>BARBERÍAS</p>
+    </div>
+    <div class="suc">${ses.sucursal}</div>
+  </div>
+
+  <div class="fecha">${fe} · ${ho}</div>
+
+  <div class="cliente-row">
+    <span>Cliente</span>
+    <span>${cl}</span>
+  </div>
+
+  <span class="lbl">Cuenta</span>
+  <table>${itemsHTML}</table>
+
+  <div class="total-row">
+    <span>Total</span>
+    <span>$${fmt(total)}</span>
+  </div>
+  <div class="metodo">Pago: ${me}</div>
+
+  <div class="footer">
+    <p>Gracias por tu visita</p>
+    <p>La Logia Barberías · ${ses.sucursal}</p>
+    <p style="margin-top:6px;color:#ddd;">· · ·</p>
+  </div>
+
+  <div class="no-print" style="text-align:center;margin-top:20px;">
+    <button onclick="window.print()" 
+      style="background:#a80040;color:#fff;border:none;padding:10px 24px;
+             border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;">
+      🖨️ Imprimir / Guardar PDF
+    </button>
+  </div>
+
+  
+</body>
+</html>`);
+  w.document.close();
+  setTimeout(()=>w.print(), 600);
+}
+
+const V=id=>document.getElementById(id)?.value||'';
+const C=id=>{const e=document.getElementById(id);if(e)e.value='';};
+const S=(arr,k)=>arr.reduce((a,x)=>a+(x[k]||0),0);
+const today=()=>new Date().toISOString().split('T')[0];
+const tomorrow=()=>{const d=new Date();d.setDate(d.getDate()+1);return d.toISOString().split('T')[0];};
+const nowTime=()=>new Date().toTimeString().slice(0,5);
+const fmt=n=>Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+/* ══════════════════════
+   INIT
+══════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  // Ocultar bookingPage al inicio (tiene display:flex propio)
+  document.getElementById('bookingPage').style.display='none';
+  // Detectar si es link de booking por URL param
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('book')==='1'){
+    const sucKey=params.get('suc')||'logia_centro';
+    mostrarBooking(sucKey);return;
+  }
+  // Por defecto mostrar la demo
+  const hoy=today(),h=nowTime();
+  ['cFecha','pFe'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=hoy;});
+  ['cHora','pHo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=h;});
+  // Animaciones scroll
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.1});
+  document.querySelectorAll('.ao').forEach(el=>obs.observe(el));
+});
+</script>
+
+<!-- ══ POPUP RESUMEN / TICKET ══ -->
+<div class="overlay" id="popTicket">
+  <div class="popup" style="max-width:420px;padding:0;overflow:hidden;border-color:#333;">
+
+    <!-- Header del ticket -->
+    <div style="background:#000;padding:1.5rem;text-align:center;border-bottom:1px solid #222;">
+      <h2 style="font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;
+                 letter-spacing:.2em;color:#fff;text-transform:uppercase;margin-bottom:.2rem;">
+        LA LOGIA
+      </h2>
+      <p id="tkSucursal" style="font-size:.65rem;color:#c8004a;letter-spacing:.2em;font-weight:700;text-transform:uppercase;"></p>
+      <p id="tkFechaHora" style="font-size:.72rem;color:#444;margin-top:.35rem;"></p>
+    </div>
+
+    <!-- Datos del cliente -->
+    <div style="padding:1rem 1.5rem;border-bottom:1px solid #1a1a1a;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:.68rem;color:#555;text-transform:uppercase;letter-spacing:.1em;font-weight:700;">Cliente</span>
+        <span id="tkCliente" style="font-size:.95rem;font-weight:700;color:#fff;font-family:'Cinzel',serif;"></span>
+      </div>
+    </div>
+
+    <!-- Items del ticket -->
+    <div style="padding:1rem 1.5rem;border-bottom:1px solid #1a1a1a;max-height:220px;overflow-y:auto;">
+      <div style="font-size:.65rem;color:#555;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:.65rem;">Cuenta</div>
+      <div id="tkItems"></div>
+    </div>
+
+    <!-- Total -->
+    <div style="padding:1rem 1.5rem;border-bottom:1px solid #333;background:#0a0a0a;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+        <span style="font-size:.72rem;color:#666;">Subtotal</span>
+        <span id="tkSubtotal" style="font-size:.82rem;color:#aaa;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:.82rem;font-weight:700;color:#fff;letter-spacing:.05em;text-transform:uppercase;">TOTAL</span>
+        <span id="tkTotal" style="font-size:1.5rem;font-weight:900;color:#c8004a;letter-spacing:-.02em;font-family:'Cinzel',serif;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4rem;">
+        <span style="font-size:.68rem;color:#444;">Método de pago</span>
+        <span id="tkMetodo" style="font-size:.75rem;color:#888;font-weight:600;"></span>
+      </div>
+    </div>
+
+    <!-- Footer ticket -->
+    <div style="padding:.75rem 1.5rem;background:#0a0a0a;border-bottom:1px solid #1a1a1a;text-align:center;">
+      <p style="font-size:.65rem;color:#2a2a2a;letter-spacing:.1em;font-family:'Cinzel',serif;">
+        Gracias por tu visita · La Logia Barberías
+      </p>
+    </div>
+
+    <!-- Botones -->
+    <div style="padding:1rem 1.5rem;display:flex;flex-direction:column;gap:.55rem;">
+      <button onclick="imprimirTicket()"
+        style="width:100%;padding:.8rem;background:#111;color:#ccc;
+               border:1px solid #333;border-radius:.4rem;font-weight:600;
+               font-size:.85rem;cursor:pointer;font-family:inherit;transition:all .2s;"
+        onmouseover="this.style.background='#1a1a1a';this.style.color='#fff'"
+        onmouseout="this.style.background='#111';this.style.color='#ccc'">
+        🖨️ Imprimir / Guardar PDF
+      </button>
+      <button onclick="confirmarPagoFinal()"
+        style="width:100%;padding:.85rem;background:#c8004a;color:#fff;
+               border:none;border-radius:.4rem;font-weight:700;
+               font-size:.9rem;cursor:pointer;font-family:inherit;transition:background .2s;"
+        onmouseover="this.style.background='#a80040'"
+        onmouseout="this.style.background='#c8004a'">
+        ✅ Confirmar Pago
+      </button>
+      <button onclick="cerrarPop('popTicket')"
+        style="background:none;border:none;color:#444;font-size:.75rem;
+               cursor:pointer;font-family:inherit;padding:.3rem;">
+        ← Volver y editar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MARCA DE AGUA ── -->
+<div class="watermark">
+  <div class="watermark-dot">N&amp;I</div>
+  <span>Powered by <strong>N&amp;I Sistemas</strong></span>
+</div>
+
+</body>
+</html>
